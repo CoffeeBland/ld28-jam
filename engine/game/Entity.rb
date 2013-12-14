@@ -1,9 +1,9 @@
 require $engineDir + '/game/Collisionnable'
 
 class Entity < Collisionnable
-	attr_accessor :imageSheet
-	attr_accessor :imageSheetOffsetX
-	attr_accessor :imageSheetOffsetY
+  attr_accessor :image_sheet
+  attr_accessor :image_sheet_offset_x
+  attr_accessor :image_sheet_offset_y
   def health
     @health
   end
@@ -14,43 +14,43 @@ class Entity < Collisionnable
     end
   end
 
-	def should_be_removed
-		@should_be_removed
-	end
-	def remove
-		@should_be_removed = true
-	end
+  def should_be_removed
+    @should_be_removed
+  end
+  def remove
+    @should_be_removed = true
+  end
 
-	def initialize pos_x, pos_y, width, height, options = Hash.new
-		super pos_x, pos_y, width, height, options
-		self.imageSheet = options[:imageSheet].nil? ? nil : options[:imageSheet]
-		self.imageSheetOffsetX = options[:imageSheetOffsetX].nil? ? nil : options[:imageSheetOffsetX]
-		self.imageSheetOffsetY = options[:imageSheetOffsetY].nil? ? nil : options[:imageSheetOffsetY]
-		self.health = options[:health].nil? ? [0 => options[:world]] : [options[:health] => options[:world]]
-		@should_be_removed = false
-	end
+  def initialize pos_x, pos_y, width, height, options = Hash.new
+    super pos_x, pos_y, width, height, options
+    self.image_sheet = options[:image_sheet].nil? ? nil : options[:image_sheet]
+    self.image_sheet_offset_x = options[:image_sheet_offset_x].nil? ? nil : options[:image_sheet_offset_x]
+    self.image_sheet_offset_y = options[:image_sheet_offset_y].nil? ? nil : options[:image_sheet_offset_y]
+    self.health = options[:health].nil? ? [0 => options[:world]] : [options[:health] => options[:world]]
+    @should_be_removed = false
+  end
 
   def die
     self.remove
   end
 
-	def drawable?
-		self.imageSheet != nil && self.imageSheetOffsetX != nil && self.imageSheetOffsetY != nil
-	end
+  def drawable?
+    self.image_sheet != nil && self.image_sheet_offset_x != nil && self.image_sheet_offset_y != nil
+  end
 
-	def update delta, world
-		super delta, world
+  def update delta, world
+    super delta, world
 
-		if self.drawable?
-			self.imageSheet.pos_x = self.pos_x + self.imageSheetOffsetX
-			self.imageSheet.pos_y = self.pos_y + self.imageSheetOffsetY
-			self.imageSheet.update delta
-		end
-	end
+    if self.drawable?
+      self.image_sheet.pos_x = self.pos_x + self.image_sheet_offset_x
+      self.image_sheet.pos_y = self.pos_y + self.image_sheet_offset_y
+      self.image_sheet.update delta
+    end
+  end
 
-	def draw camera
-		if self.drawable?
-			self.imageSheet.draw camera
-		end
-	end
+  def draw camera
+    if self.drawable?
+      self.image_sheet.draw camera
+    end
+  end
 end
