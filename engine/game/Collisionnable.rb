@@ -1,5 +1,4 @@
-
-require $engineDir + '/utils/AABB'
+require $engineDir + '/utils/aabb'
 
 class Collision
   attr_accessor :collision_x

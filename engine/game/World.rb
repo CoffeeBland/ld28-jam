@@ -1,4 +1,4 @@
-require $engineDir + '/utils/SpatialMap'
+require $engineDir + '/utils/spatial_map'
 
 class World
   attr_accessor :gravity_x
@@ -38,12 +38,18 @@ class World
     end
   end
 
-  def add entity
-    self.entities.add entity
-    self.spatial_map.put entity
-  end
-  def remove entity
-    self.entities.delete entity
-    self.spatial_map.remove entity
-  end
+	def add entity
+		self.entities.add entity
+		self.spatial_map.put entity
+	end
+	def remove entity
+		self.entities.delete entity
+		self.spatial_map.remove entity
+	end
+
+	def damage_point pos_x, pos_y, radius, source, damage
+		self.spatial_map.within(pos_x, pos_y, radius).delete(source).each do |entity|
+			entity.hit_for damage
+		end
+	end
 end

@@ -1,4 +1,4 @@
-require $engineDir + '/game/Collisionnable'
+require $engineDir + '/game/collisionnable'
 
 class Entity < Collisionnable
   attr_accessor :image_sheet
@@ -36,6 +36,10 @@ class Entity < Collisionnable
 
   def drawable?
     self.image_sheet != nil && self.image_sheet_offset_x != nil && self.image_sheet_offset_y != nil
+  end
+
+  def hit_for damage
+  	self.health -= damage
   end
 
   def update delta, world

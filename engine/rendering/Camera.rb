@@ -1,4 +1,4 @@
-require $engineDir + '/utils/AABB'
+require $engineDir + '/utils/aabb'
 
 class Camera < AABB
   def center_on entity

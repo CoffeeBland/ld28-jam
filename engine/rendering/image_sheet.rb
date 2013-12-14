@@ -1,4 +1,4 @@
-require $engineDir + '/utils/AABB'
+require $engineDir + '/utils/aabb'
 
 class ImageSheet < AABB
 	# Rendering properties

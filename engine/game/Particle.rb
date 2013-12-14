@@ -1,4 +1,4 @@
-require $engineDir + '/game/Entity'
+require $engineDir + '/game/entity'
 
 class Particle < Entity
   attr_accessor :time_remaining
@@ -14,7 +14,7 @@ class Particle < Entity
   def update delta, world
     super delta, world
     self.time_remaining -= delta
-    if (self.time_remaining < 0)
+    if self.time_remaining < 0
       self.die world
     end
   end

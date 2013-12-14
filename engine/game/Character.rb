@@ -1,4 +1,4 @@
-require $engineDir + '/game/Entity'
+require $engineDir + '/game/entity'
 
 class Character < Entity
 end
