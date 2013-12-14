@@ -22,46 +22,53 @@ class ImageSheet < AABB
 		self.frames_per_second = 1000 / val
 	end
 	attr_accessor :frameTime
+	attr_accessor :is_repeating
 
 	# Tiling accessors
-	def tileX
-		@tileX
+	def tile_x
+		@tile_x
 	end
-	def tileX= val
-		@tileX = val
-		while @tileX < 0
-			@tileX += self.tilesX
+	def tile_x= val
+		@tile_x = val
+		while @tile_x < 0
+			@tile_x += self.tiles_x
 		end
-		while @tileX >= self.tilesX
-			@tileX -= self.tilesX
+		if self.is_repeating
+			if @tile_x >= self.tiles_x
+				@tile_x = self.tiles_x
+			end
+		else
+			while @tile_x >= self.tiles_x
+				@tile_x -= self.tiles_x
+			end
 		end
 	end
 
-	def tileY
-		@tileY
+	def tile_y
+		@tile_y
 	end
-	def tileY= val
-		@tileY = val
-		while @tileY < 0
-			@tileY += self.tilesY
+	def tile_y= val
+		@tile_y = val
+		while @tile_y < 0
+			@tile_y += self.tiles_y
 		end
-		while @tileY >= self.tilesY
-			@tileY -= self.tilesY
+		while @tile_y >= self.tiles_y
+			@tile_y -= self.tiles_y
 		end
 	end
 
 	# Utility accessors
-	def tilesX
+	def tiles_x
 		self.tiles.length
 	end
-	def tilesY
-		self.tiles[self.tileX]
+	def tiles_y
+		self.tiles[self.tile_x]
 	end
 
 	def initialize window, imagePath, tileWidth, tileHeight, options
 		@tiles = Gosu::Image.load_tiles window, imagePath, tileWidth, tileHeight
-		@tileX = 0
-		@tileY = 0
+		@tile_x = 0
+		@tile_y = 0
 		@pos_x = 0
 		@pos_y = 0
 		@width = tileWidth
@@ -69,6 +76,7 @@ class ImageSheet < AABB
 		@color = 0xffffff00
 		@z_index = 0
 
+		self.is_repeating = true
 		if options[:frames_per_second] != nil
 			self.frames_per_second = options[:frames_per_second]
 			self.frameTime = self.frame_duration
@@ -83,12 +91,12 @@ class ImageSheet < AABB
 			self.frameTime -= delta
 			while self.frameTime < 0
 				self.frameTime += self.frame_duration
-				self.tileX += 1
+				self.tile_x += 1
 			end
 		end
 	end
 
 	def draw camera
-		self.tiles[self.tileX][self.tileY].draw self.pos_x - camera.pos_x, self.pos_y - camera.pos_y, self.z_index, 1, 1, self.color
+		self.tiles[self.tile_x][self.tile_y].draw self.pos_x - camera.pos_x, self.pos_y - camera.pos_y, self.z_index, 1, 1, self.color
 	end
 end
