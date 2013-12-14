@@ -15,7 +15,6 @@ class State
 
   def init
     @has_been_initialized = true
-    raise "Implement init in game state #{self.class.name}"
   end
 
   def enter

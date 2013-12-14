@@ -1,4 +1,4 @@
-require EN + '/states/State'
+require ED + '/states/State'
 
 module LD28
   module States

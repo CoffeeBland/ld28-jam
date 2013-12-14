@@ -1,7 +1,11 @@
-$engineDir = EN = File.dirname(File.absolute_path(__FILE__)) + '/engine'
+$engineDir = ED = File.dirname(File.absolute_path(__FILE__)) + '/engine'
+GD = File.dirname(File.absolute_path(__FILE__)) + '/ld28'
 
 require "gosu"
-Dir.glob($engineDir + "/**/*.rb").each do |file|
+Dir.glob(ED + "/**/*.rb").each do |file|
+  require file
+end
+Dir.glob(GD + "/**/*.rb").each do |file|
   require file
 end
 
@@ -34,7 +38,7 @@ class Game < Gosu::Window
   end
 
   def init_sounds
-    Sounds[:bg1] = 'res\sounds\horrorambient.ogg'
+    Sounds[:bg1] = File.join('res', 'sounds', 'horrorambient.ogg')
   end
 
   def switch_to state_name

@@ -1,10 +1,16 @@
-require EN + '/states/State'
+require ED + '/states/State'
 
 module LD28
   module States
     class Init < State
 
-      def initialize
+      def update delta
+      end
+
+      def draw
+      end
+
+      def init
         super
         self.input_press Gosu::KbEscape, Proc.new {
           puts 'Escape!'
