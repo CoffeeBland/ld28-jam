@@ -4,10 +4,6 @@ module LD28
   module States
     class Menu < State
 
-      def initialize
-        super
-      end
-
       def update delta
       end
 

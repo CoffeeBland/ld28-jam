@@ -16,14 +16,17 @@ class Game < Gosu::Window
     @pressed_inputs = Hash.new
 
     @states = {
-      :init => LD28::States::Logo.new,
-      :menu => LD28::States::Menu.new,
-      :castle => LD28::States::Castle.new
+      :init => LD28::States::Logo.new(self),
+      :menu => LD28::States::Menu.new(self),
+      :castle => LD28::States::Castle.new(self)
     }
     self.switch_to :init
 
     Sounds.window = self
     init_sounds()
+
+    Images.window = self
+    init_images()
 
     # volume=1, speed=1, loop=true
     # sound1inst = Sounds[:bg1].play(1, 0.3, true)
@@ -37,6 +40,10 @@ class Game < Gosu::Window
 
   def init_sounds
     Sounds[:bg1] = File.join('res', 'sounds', 'horrorambient.ogg')
+  end
+
+  def init_images
+    Images[:logo] = File.join('res', 'images', 'logo.png')
   end
 
   def switch_to state_name

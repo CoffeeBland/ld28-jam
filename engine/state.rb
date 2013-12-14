@@ -1,8 +1,9 @@
 class State
-  def initialize
+  def initialize game
     @press = Hash.new
     @release = Hash.new
     @down = Hash.new
+    @game = game
   end
 
   def update delta
