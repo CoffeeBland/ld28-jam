@@ -28,6 +28,9 @@ class Game < Gosu::Window
     Images.window = self
     init_images()
 
+    Text.window = self
+    init_font()
+
     # volume=1, speed=1, loop=true
     # sound1inst = Sounds[:bg1].play(1, 0.3, true)
     # you get back a sample instance that has:
@@ -44,6 +47,10 @@ class Game < Gosu::Window
 
   def init_images
     Images[:logo] = File.join('res', 'images', 'logo.png')
+  end
+
+  def init_font
+    Text.font = File.join('res', 'font.ttf')
   end
 
   def switch_to state_name
