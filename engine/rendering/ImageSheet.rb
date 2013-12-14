@@ -1,28 +1,28 @@
 require $engineDir + '/utils/AABB'
 
 class ImageSheet < AABB
-	# Rendering properties 
+	# Rendering properties
 	attr_accessor :tiles
 	attr_accessor :zIndex
 	attr_accessor :color
-	
+
 	# Animation properties
-	def framesPerSecond
-		@framesPerSecond
+	def frames_per_second
+		@frames_per_second
 	end
-	def framesPerSecond= val
-		@framesPerSecond = val
-		self.frameDuration = 1000 / val
+	def frames_per_second= val
+		@frames_per_second = val
+		self.frame_duration = 1000 / val
 	end
-	def frameDuration
-		@frameDuration
+	def frame_duration
+		@frame_duration
 	end
-	def frameDuration= val
-		@frameDuration = val
-		self.framesPerSecond = 1000 / val
+	def frame_duration= val
+		@frame_duration = val
+		self.frames_per_second = 1000 / val
 	end
 	attr_accessor :frameTime
-	
+
 	# Tiling accessors
 	def tileX
 		@tileX
@@ -36,7 +36,7 @@ class ImageSheet < AABB
 			@tileX -= self.tilesX
 		end
 	end
-	
+
 	def tileY
 		@tileY
 	end
@@ -49,7 +49,7 @@ class ImageSheet < AABB
 			@tileY -= self.tilesY
 		end
 	end
-	
+
 	# Utility accessors
 	def tilesX
 		self.tiles.length
@@ -57,8 +57,8 @@ class ImageSheet < AABB
 	def tilesY
 		self.tiles[self.tileX]
 	end
-	
-	def initialize window, imagePath, tileWidth, tileHeight 
+
+	def initialize window, imagePath, tileWidth, tileHeight
 		@tiles = Gosu::Image.load_tiles window, imagePath, tileWidth, tileHeight
 		@tileX = 0
 		@tileY = 0
@@ -69,17 +69,17 @@ class ImageSheet < AABB
 		@color = 0xffffff00
 		@zIndex = 0
 	end
-	
+
 	def update delta
-		unless self.frameDuration.nil? or self.frameDuration <= 0
+		unless self.frame_duration.nil? or self.frame_duration <= 0
 			self.frameTime -= delta
 			while self.frameTime < 0
-				self.frameTime += self.frameDuration
+				self.frameTime += self.frame_duration
 				self.tileX += 1
 			end
 		end
 	end
-	
+
 	def draw camera
 		self.tiles[self.tileX][self.tileY].draw self.posX - camera.posX, self.posY - camera.posY, self.zIndex, 1, 1, self.color
 	end

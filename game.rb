@@ -4,51 +4,62 @@ require "gosu"
 Dir.glob($engineDir + "/**/*.rb").each do |file|
 	require file
 end
-#require $engineDir + '/states/State'
 
 class Game < Gosu::Window
 	def initialize
 		super 640, 480, false
 		self.caption = 'Ludum Dare 28 engine prep'
 		@time = Gosu::milliseconds
-		@states = { 'InitState' => InitState.new  }
-		self.switchTo 'InitState'
-		
-		@pressedInputs = Hash.new
+
+		@pressed_inputs = Hash.new
+		@states = { :init_state => InitState.new  }
+		self.switch_to :init_state
+
+		Sounds.window = self
+		Sounds.add(:bg1, 'res/sounds/bulgarish_vln.mp3')
+
+		# volume=1, speed=1, loop=true
+		sound1inst = Sounds[:bg1].play(1, 0.3, true)
+		# you get back a sample instance that has:
+		# sound1inst.pause
+		# sound1inst.paused?
+		# sound1inst.playing?
+		# sound1inst.resume
+		# sound1inst.stop
 	end
-	
-	def switchTo stateName
-		unless @activeState.nil?
-			@activeState.leave
+
+	def switch_to stateName
+		unless @active_state.nil?
+			@active_state.leave
 		end
-		@activeState = @states[stateName]
-		@activeState.enter
+		@active_state = @states[stateName]
+		@active_state.enter
 	end
-	
-	def calculateDelta
+
+	def calculate_delta
 		time = Gosu::milliseconds
 		@delta = time - @time
 		@time = time
 		@delta
 	end
-	
+
 	def update
-		@pressedInputs.keys.each do |id| @activeState.down id end
-		@activeState.update self.calculateDelta
+		@pressed_inputs.keys.each do |id| @active_state.down id end
+		@active_state.update self.calculate_delta
 	end
-	
-	def draw 
-		@activeState.draw
+
+	def draw
+		@active_state.draw
 	end
-	
+
 	def button_down id
-		@activeState.press id
-		@pressedInputs[id] = true
+		@active_state.press id
+		@pressed_inputs[id] = true
 	end
-	
+
 	def button_up id
-		@activeState.release id
-		@pressedInputs.delete id
+		@active_state.release id
+		@pressed_inputs.delete id
 	end
 end
 Game.new.show
