@@ -16,7 +16,7 @@ class Game < Gosu::Window
     @pressed_inputs = Hash.new
 
     @states = {
-      :init => LD28::States::Init.new,
+      :init => LD28::States::Logo.new,
       :menu => LD28::States::Menu.new,
       :castle => LD28::States::Castle.new
     }
