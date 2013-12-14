@@ -23,6 +23,7 @@ class Action
       self.current_cue = self.cues.pop
     else
       nil
+    end
   end
 
   def completed?
@@ -33,7 +34,7 @@ class Action
     @time_left -= value
 
     while self.next_cue
-      self.current_cue.act world source
+      self.current_cue.act world, source
     end
   end
 end
