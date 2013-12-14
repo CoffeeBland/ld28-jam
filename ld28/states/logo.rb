@@ -12,7 +12,9 @@ module LD28
       end
 
       def draw
-        Images[:logo].draw(0,0,0)
+        self.set_color 0xFFFFFFFF
+        draw_rect 0, 0, @game.width, @game.height
+        Images[:logo].draw_centered
       end
 
       def init

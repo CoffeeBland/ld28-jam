@@ -8,19 +8,19 @@ require "gosu"
 end
 
 class Game < Gosu::Window
+  # Not constants so when we find a way for it to be dynamic we can chage them
+  @@width = 640
+  @@height = 480
+  def self.width; @@width; end
+  def self.height; @@height; end
+
+  # All the setup!
   def initialize
-    super 640, 480, false
-    self.caption = 'Ludum Dare 28 engine prep'
+    super @@width, @@height, false
+    self.caption = 'Ludum Dare 28 : You only get one! (And you are the only one Hero)'
+
     @time = Gosu::milliseconds
-
     @pressed_inputs = Hash.new
-
-    @states = {
-      :init => LD28::States::Logo.new(self),
-      :menu => LD28::States::Menu.new(self),
-      :castle => LD28::States::Castle.new(self)
-    }
-    self.switch_to :init
 
     Sounds.window = self
     init_sounds()
@@ -28,14 +28,12 @@ class Game < Gosu::Window
     Images.window = self
     init_images()
 
-    # volume=1, speed=1, loop=true
-    # sound1inst = Sounds[:bg1].play(1, 0.3, true)
-    # you get back a sample instance that has:
-    # sound1inst.pause
-    # sound1inst.paused?
-    # sound1inst.playing?
-    # sound1inst.resume
-    # sound1inst.stop
+    @states = {
+      :init => LD28::States::Logo.new(self),
+      :menu => LD28::States::Menu.new(self),
+      :castle => LD28::States::Castle.new(self)
+    }
+    self.switch_to :init
   end
 
   def init_sounds

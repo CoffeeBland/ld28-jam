@@ -53,4 +53,12 @@ class State
   def input_down id, function
     @down[id] = function
   end
+
+  # Method redirect to game
+  def set_color color
+    @game.set_color color
+  end
+  def draw_rect x, y, width, height
+    @game.draw_rect x, y, width, height
+  end
 end

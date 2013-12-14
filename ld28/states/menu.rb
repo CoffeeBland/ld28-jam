@@ -12,7 +12,9 @@ module LD28
 
       def init
         super
-
+        self.input_press Gosu::KbEscape, Proc.new {
+          @game.close
+        }
       end
 
       def enter
