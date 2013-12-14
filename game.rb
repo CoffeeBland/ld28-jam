@@ -1,8 +1,9 @@
-$engineDir = ED = File.dirname(File.absolute_path(__FILE__)) + '/engine'
+ED = File.dirname(File.absolute_path(__FILE__)) + '/engine'
 GD = File.dirname(File.absolute_path(__FILE__)) + '/ld28'
 
 require "gosu"
 Dir.glob(ED + "/**/*.rb").each do |file|
+  puts file[file.rindex(/\//)..-1]
   require file
 end
 Dir.glob(GD + "/**/*.rb").each do |file|

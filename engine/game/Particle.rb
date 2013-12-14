@@ -1,4 +1,4 @@
-require $engineDir + '/game/entity'
+require ED + '/game/entity'
 
 class Particle < Entity
   attr_accessor :time_remaining

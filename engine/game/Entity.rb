@@ -1,4 +1,4 @@
-require $engineDir + '/game/collisionnable'
+require ED + '/game/collisionnable'
 
 class Entity < Collisionnable
   attr_accessor :image_sheet

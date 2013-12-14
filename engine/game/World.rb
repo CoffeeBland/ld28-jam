@@ -1,4 +1,4 @@
-require $engineDir + '/utils/spatial_map'
+require ED + '/utils/spatial_map'
 
 class World
   attr_accessor :gravity_x
