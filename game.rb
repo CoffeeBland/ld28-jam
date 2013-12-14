@@ -1,12 +1,13 @@
 ED = File.dirname(File.absolute_path(__FILE__)) + '/engine'
 GD = File.dirname(File.absolute_path(__FILE__)) + '/ld28'
+$: << File.expand_path(File.dirname(__FILE__))
 
 require "gosu"
 Dir.glob(ED + "/**/*.rb").each do |file|
   puts file[file.rindex(/\//)..-1]
   require file
 end
-Dir.glob(GD + "/**/*.rb").each do |file|
+Dir.glob(GD + "/states/*.rb").each do |file|
   require file
 end
 

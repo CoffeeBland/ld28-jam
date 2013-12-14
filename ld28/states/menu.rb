@@ -1,4 +1,4 @@
-require ED + '/states/State'
+require "engine/state"
 
 module LD28
   module States
