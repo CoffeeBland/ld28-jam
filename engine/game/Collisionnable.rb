@@ -1,4 +1,4 @@
-require ED + '/utils/aabb'
+require "engine/utils/aabb"
 
 class Collision
   attr_accessor :collision_x

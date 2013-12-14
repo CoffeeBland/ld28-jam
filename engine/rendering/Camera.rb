@@ -1,4 +1,4 @@
-require ED + '/utils/aabb'
+require "engine/utils/aabb"
 
 class Camera < AABB
   def center_on entity

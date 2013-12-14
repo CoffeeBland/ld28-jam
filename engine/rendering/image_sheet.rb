@@ -1,4 +1,4 @@
-require ED + '/utils/aabb'
+require "engine/utils/aabb"
 
 class ImageSheet < AABB
 	# Rendering properties

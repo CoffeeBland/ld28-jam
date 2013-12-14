@@ -1,4 +1,4 @@
-require ED + '/game/collisionnable'
+require "engine/game/collisionnable"
 
 class Entity < Collisionnable
   attr_accessor :image_sheet

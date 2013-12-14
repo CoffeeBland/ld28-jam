@@ -1,4 +1,4 @@
-require ED + '/game/entity'
+require "engine/game/entity"
 
 class Particle < Entity
   attr_accessor :time_remaining
