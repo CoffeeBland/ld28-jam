@@ -8,7 +8,7 @@ class Character < Entity
   def saying
     @speech
   end
-
+#lol
   def do action
     @current_action = action
   end
