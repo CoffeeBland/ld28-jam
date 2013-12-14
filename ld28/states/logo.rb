@@ -7,7 +7,7 @@ module LD28
       def update delta
         @now_in_for += delta
         if @now_in_for > 3000
-          @game.switch_to :menu
+          #@game.switch_to :menu
         end
       end
 
@@ -15,6 +15,7 @@ module LD28
         self.set_color 0xFFFFFFFF
         draw_rect 0, 0, @game.width, @game.height
         Images[:logo].draw_centered
+        Text.draw ["TROLOLOL", "It ain't"], 80, 80, 0xff000000
       end
 
       def init

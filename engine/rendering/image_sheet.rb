@@ -49,6 +49,7 @@ class ImageSheet < AABB
 	end
 	def tile_y= val
 		@tile_y = val
+		self.tile_x = 0
 		while @tile_y < 0
 			@tile_y += self.tiles_y
 		end
@@ -66,7 +67,7 @@ class ImageSheet < AABB
 	end
 
 	def initialize window, imagePath, tileWidth, tileHeight, options
-		@tiles = Gosu::Image.load_tiles window, imagePath, tileWidth, tileHeight
+		@tiles = Gosu::Image.load_tiles window, imagePath, tileWidth, tileHeight, true
 		@tile_x = 0
 		@tile_y = 0
 		@pos_x = 0

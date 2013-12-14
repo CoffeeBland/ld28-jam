@@ -28,6 +28,9 @@ class Game < Gosu::Window
     Images.window = self
     init_images()
 
+    Text.window = self
+    init_font()
+
     @states = {
       :init => LD28::States::Logo.new(self),
       :menu => LD28::States::Menu.new(self),
@@ -42,6 +45,10 @@ class Game < Gosu::Window
 
   def init_images
     Images[:logo] = File.join('res', 'images', 'logo.png')
+  end
+
+  def init_font
+    Text.font = File.join('res', 'font.ttf')
   end
 
   def switch_to state_name

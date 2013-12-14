@@ -1,0 +1,13 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    gosu (0.7.50-x86-mingw32)
+    texplay (0.4.3-x86-mingw32)
+      gosu (>= 0.7.25)
+
+PLATFORMS
+  x86-mingw32
+
+DEPENDENCIES
+  gosu
+  texplay
