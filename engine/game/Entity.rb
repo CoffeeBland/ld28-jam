@@ -8,9 +8,9 @@ class Entity < Collisionnable
     @health
   end
   def health= value
-    @health = value
+    @health = value.keys[0]
     if (@health < 0)
-      self.die
+      self.die value.values[0]
     end
   end
 
@@ -26,7 +26,7 @@ class Entity < Collisionnable
 		self.imageSheet = options[:imageSheet].nil? ? nil : options[:imageSheet]
 		self.imageSheetOffsetX = options[:imageSheetOffsetX].nil? ? nil : options[:imageSheetOffsetX]
 		self.imageSheetOffsetY = options[:imageSheetOffsetY].nil? ? nil : options[:imageSheetOffsetY]
-		self.health = options[:health].nil? ? 0 : options[:health]
+		self.health = options[:health].nil? ? [0 => options[:world]] : [options[:health] => options[:world]]
 		@should_be_removed = false
 	end
 

@@ -58,7 +58,7 @@ class ImageSheet < AABB
 		self.tiles[self.tileX]
 	end
 
-	def initialize window, imagePath, tileWidth, tileHeight
+	def initialize window, imagePath, tileWidth, tileHeight, options
 		@tiles = Gosu::Image.load_tiles window, imagePath, tileWidth, tileHeight
 		@tileX = 0
 		@tileY = 0
@@ -68,6 +68,14 @@ class ImageSheet < AABB
 		@height = tileHeight
 		@color = 0xffffff00
 		@z_index = 0
+
+		if options[:frames_per_second] != nil
+			self.frames_per_second = options[:frames_per_second]
+			self.frameTime = self.frame_duration
+		elsif options[:frame_duration] != nil
+			self.frame_duration = options[:frame_duration]
+			self.frameTime = self.frame_duration
+		end
 	end
 
 	def update delta

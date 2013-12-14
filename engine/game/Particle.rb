@@ -15,7 +15,7 @@ class Particle < Entity
     super delta, world
     self.time_remaining -= delta
     if (self.time_remaining < 0)
-      self.die
+      self.die world
     end
   end
 
@@ -23,7 +23,7 @@ class Particle < Entity
     super col, world
 
     if self.explodes_on_contact
-      self.die
+      self.die world
     end
   end
 end
