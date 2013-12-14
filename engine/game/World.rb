@@ -18,21 +18,22 @@ class World
 	def update delta
 		toRemove = Array.new
 		self.entites.each do |entity|
-			entity.update delta, self
 			if entity.shouldBeRemoved
 				toRemove.add entity
-			end
-			if entity.collisions && entity.hasMoved
-				self.spatialMap.update entity
+			else
+				entity.update delta, self
+				if entity.collisions && entity.hasMoved
+					self.spatialMap.update entity
+				end
 			end
 		end
 		toRemove.each do |entity|
 			self.remove entity
 		end
 	end
-	
+
 	def draw camera
-		self.entities.each do |entity|
+		self.spatialMap.get(camera).each do |entity|
 			entity.draw camera
 		end
 	end

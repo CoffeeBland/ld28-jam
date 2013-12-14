@@ -4,6 +4,15 @@ class Entity < Collisionnable
 	attr_accessor :imageSheet
 	attr_accessor :imageSheetOffsetX
 	attr_accessor :imageSheetOffsetY
+  def health
+    @health
+  end
+  def health= value
+    @health = value
+    if (@health < 0)
+      self.die
+    end
+  end
 
 	def shouldBeRemoved
 		@shouldBeRemoved
@@ -11,14 +20,19 @@ class Entity < Collisionnable
 	def remove
 		@shouldBeRemoved = true
 	end
-	
-	def initialize posX, posY, width, height, options = Hash.new, imageSheet = nil, imageSheetOffsetX = nil, imageSheetOffsetY = nil
+
+	def initialize posX, posY, width, height, options = Hash.new
 		super posX, posY, width, height, options
-		self.imageSheet = imageSheet
-		self.imageSheetOffsetX = imageSheetOffsetX
-		self.imageSheetOffsetY = imageSheetOffsetY
+		self.imageSheet = options[:imageSheet].nil? ? nil : options[:imageSheet]
+		self.imageSheetOffsetX = options[:imageSheetOffsetX].nil? ? nil : options[:imageSheetOffsetX]
+		self.imageSheetOffsetY = options[:imageSheetOffsetY].nil? ? nil : options[:imageSheetOffsetY]
+		self.health = options[:health].nil? ? 0 : options[:health]
 		@shouldBeRemoved = false
 	end
+
+  def die
+    self.remove
+  end
 
 	def drawable?
 		self.imageSheet != nil && self.imageSheetOffsetX != nil && self.imageSheetOffsetY != nil
