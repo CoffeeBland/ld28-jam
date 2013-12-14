@@ -16,7 +16,7 @@ class Game < Gosu::Window
 		self.switch_to :init_state
 
 		Sounds.window = self
-		Sounds.add(:bg1, 'res/sounds/bulgarish_vln.mp3')
+		Sounds[:bg1] = 'res\sounds\horrorambient.ogg'
 
 		# volume=1, speed=1, loop=true
 		sound1inst = Sounds[:bg1].play(1, 0.3, true)

@@ -3,7 +3,7 @@ require $engineDir + '/utils/AABB'
 class ImageSheet < AABB
 	# Rendering properties
 	attr_accessor :tiles
-	attr_accessor :zIndex
+	attr_accessor :z_index
 	attr_accessor :color
 
 	# Animation properties
@@ -62,12 +62,12 @@ class ImageSheet < AABB
 		@tiles = Gosu::Image.load_tiles window, imagePath, tileWidth, tileHeight
 		@tileX = 0
 		@tileY = 0
-		@posX = 0
-		@posY = 0
+		@pos_x = 0
+		@pos_y = 0
 		@width = tileWidth
 		@height = tileHeight
 		@color = 0xffffff00
-		@zIndex = 0
+		@z_index = 0
 	end
 
 	def update delta
@@ -81,6 +81,6 @@ class ImageSheet < AABB
 	end
 
 	def draw camera
-		self.tiles[self.tileX][self.tileY].draw self.posX - camera.posX, self.posY - camera.posY, self.zIndex, 1, 1, self.color
+		self.tiles[self.tileX][self.tileY].draw self.pos_x - camera.pos_x, self.pos_y - camera.pos_y, self.z_index, 1, 1, self.color
 	end
 end

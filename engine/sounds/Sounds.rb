@@ -10,11 +10,11 @@ class Sounds
     @@sounds[key]
   end
 
-  def self.[]= key, val
-    @@sounds[key] = val
+  def self.[]= key, path
+    @@sounds[key] = Gosu::Sample.new(@@window, path)
   end
 
-  def self.add key, path
-    @@sounds[key] = Gosu::Sample.new(@@window, path)
+  def self.add key, val
+    @@sounds[key] = val
   end
 end

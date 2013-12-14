@@ -6,12 +6,12 @@ class SpatialMap
 	end
 
 	def put object
-		rangeX = object.posX.floor..(object.posX + object.width)
-		rangeY = object.posY.floor..(object.posY + object.height)
-		@objects[object] = [rangeX, rangeY]
+		range_x = object.pos_x.floor..(object.pos_x + object.width)
+		range_y = object.pos_y.floor..(object.pos_y + object.height)
+		@objects[object] = [range_x, range_y]
 
-		rangeX.step @tile_size do |x|
-			rangeY.step @tile_size do |y|
+		range_x.step @tile_size do |x|
+			range_y.step @tile_size do |y|
 				elements = @map[[x, y]]
 				if elements == nil
 					elements = Array.new
@@ -42,10 +42,10 @@ class SpatialMap
 
 	def get region
 		objects = Set.new
-		rangeX = region.posX.floor..(region.posX + region.width)
-		rangeY = region.posY.floor..(region.posY + region.height)
-		rangeX.step @tile_size  do |x|
-			rangeY.step @tile_size  do |y|
+		range_x = region.pos_x.floor..(region.pos_x + region.width)
+		range_y = region.pos_y.floor..(region.pos_y + region.height)
+		range_x.step @tile_size  do |x|
+			range_y.step @tile_size  do |y|
 				objects.concat @map[[x, y]]
 			end
 		end
