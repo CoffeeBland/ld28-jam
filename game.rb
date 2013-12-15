@@ -45,6 +45,7 @@ class Game < Gosu::Window
 
   def init_images
     Images[:logo] = File.join('res', 'images', 'logo.png')
+    Images[:desert_bg] = File.join('res', 'images', 'desert.png')
   end
 
   def init_font
