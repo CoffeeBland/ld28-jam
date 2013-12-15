@@ -7,7 +7,8 @@ class State
   end
 
   def update delta
-    raise "Implement update in game state #{self.class.name}"
+    if delta > 1000; return; end
+    @now_in_for += delta
   end
 
   def draw
@@ -22,6 +23,7 @@ class State
     unless @has_been_initialized
       self.init
     end
+    @now_in_for = 0
   end
 
   def leave
@@ -58,7 +60,26 @@ class State
   def set_color color
     @game.set_color color
   end
-  def draw_rect x, y, width, height
-    @game.draw_rect x, y, width, height
+  def draw_rect x, y, width, height, z = 0
+    @game.draw_rect x, y, width, height, z
+  end
+
+  # Transitions
+  def transition_draw color, percent
+    color = Gosu::Color.rgba color
+    color.alpha = (color.alpha == 0) ? percent * 255 : (1.to_f-percent) * 255
+
+    # Ready to draw
+    set_color color
+    draw_rect 0, 0, @game.width, @game.height, 100
+    set_color 0x000000FF
+  end
+
+  def transition color, start, stop, current
+    if current >= start && current <= stop
+      length = stop - start
+      current_rel = current - start
+      transition_draw color, current_rel.to_f / length.to_f
+    end
   end
 end

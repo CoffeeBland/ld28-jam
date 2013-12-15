@@ -5,9 +5,11 @@ module LD28
     class Menu < State
 
       def update delta
+        super delta
       end
 
       def draw
+        transition 0x000000FF, 0, 1000, @now_in_for
       end
 
       def init
