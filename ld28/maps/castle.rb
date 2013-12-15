@@ -59,11 +59,11 @@ module LD28
             :image_sheet_offset_y => -12
           }
         state.world.add state.player
-        @king = Character.new (-299 + 1*24), (350 - 5*24), 18, 32, {
-            :image_sheet => get_hero_sheet.call('homme'),
+        @king = Character.new (-299 + 1*24), (350 - 5*24), 18, 42, {
+            :image_sheet => get_hero_sheet.call('roi'),
             :health => 100,
             :image_sheet_offset_x => -3,
-            :image_sheet_offset_y => -16
+            :image_sheet_offset_y => -6
           }
         @king.facing = :right
         state.world.add @king

@@ -1,6 +1,7 @@
 require "set"
 require "engine/utils/spatial_map"
 require "pp"
+require "engine/game/character"
 
 class World
   TILE_SIZE = 96
@@ -64,7 +65,9 @@ class World
   def damage_point pos_x, pos_y, radius, source, damage
     objs = self.spatial_map.within(pos_x, pos_y, radius).delete(source)
     objs.each do |entity|
-      entity.hit_for damage, self
+      unless entity.is_a?(Character) && entity.damaged_duration > 0
+        entity.hit_for damage, self
+      end
     end
     objs
   end

@@ -10,13 +10,16 @@ module Gosu
         @color = Gosu::Color.rgba(color)
       end
     end
+    def color
+      @color
+    end
 
-    def draw_rect x, y, width, height, z = 0
+    def draw_rect x, y, width, height, z = 0, color = @color
       self.draw_quad(
-          x,         y,          @color,
-          x + width, y,          @color,
-          x,         y + height, @color,
-          x + width, y + height, @color,
+          x,         y,          color,
+          x + width, y,          color,
+          x,         y + height, color,
+          x + width, y + height, color,
         z)
     end
 

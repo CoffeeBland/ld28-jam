@@ -36,6 +36,11 @@ module LD28
         @world.draw @camera
         @current_map.draw self, @game unless @current_map.nil?
 
+        unless @player.nil?
+          Images[:health_bar_container].draw 16, 16, 1000
+          draw_rect 16 + 15, 16 + 8, @player.health, 16, 1001, 0xFFBC0000
+        end
+
         # BEHOLD! Debugging down here
         set_color 0xEE00EEFF; @world.entities.each do |e| draw_rect_outline e.pos_x - @camera.pos_x, e.pos_y - @camera.pos_y, e.width, e.height, 1000; end
       end

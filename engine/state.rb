@@ -60,8 +60,8 @@ class State
   def set_color color
     @game.set_color color
   end
-  def draw_rect x, y, width, height, z = 0
-    @game.draw_rect x, y, width, height, z
+  def draw_rect x, y, width, height, z = 0, color = @game.color
+    @game.draw_rect x, y, width, height, z, color
   end
   def draw_rect_outline x, y, width, height, z = 0
     @game.draw_rect_outline x, y, width, height, z

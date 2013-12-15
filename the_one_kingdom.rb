@@ -8,14 +8,15 @@ require "gosu"
 end
 
 class Game < Gosu::Window
-  # Not constants so when we find a way for it to be dynamic we can chage them
-  @@width = 640
+  # Not constants so when we find a way for it to be dynamic we can change them
+  @@width = 480
   @@height = 480
   def self.width; @@width; end
   def self.height; @@height; end
 
   # All the setup!
   def initialize
+    Gosu::enable_undocumented_retrofication
     super @@width, @@height, false
     self.caption = 'Ludum Dare 28 : The One Kingdom'
 
@@ -50,6 +51,7 @@ class Game < Gosu::Window
     Images[:gate] = File.join('res', 'images', 'suchgate.png')
     Images[:tile1] = File.join('res', 'images', 'tile1.png')
     Images[:tile2] = File.join('res', 'images', 'tile2.png')
+    Images[:health_bar_container] = File.join('res', 'images', 'health_bar_container.png')
   end
 
   def init_font
