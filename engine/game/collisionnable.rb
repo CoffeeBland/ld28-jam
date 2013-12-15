@@ -112,6 +112,10 @@ class Collisionnable < AABB
     position_y - (entity.pos_y + entity.height) < 0 &&
     (position_y + self.height) - entity.pos_y > 0
   end
+  def overlaps? entity
+    self.x_aligned?(entity, self.pos_x, self.pos_y) &&
+    self.y_aligned?(entity, self.pos_x, self.pos_y)
+  end
   def x_aligned? entity, position_x, position_y
     position_x - (entity.pos_x + entity.width) < DISTANCE_TOLERANCE &&
     (position_x + self.width) - entity.pos_x > -DISTANCE_TOLERANCE

@@ -48,6 +48,7 @@ module LD28
         @maps = Hash.new
 
         self.input_down Gosu::KbLeft, Proc.new {
+          @player.facing_y = :none
           multiplier = 1
           if @player.current_action.nil?
             @player.facing = :left
@@ -61,6 +62,7 @@ module LD28
           end
         }
         self.input_down Gosu::KbRight, Proc.new {
+          @player.facing_y = :none
           multiplier = 1
           if @player.current_action.nil?
             @player.facing = :right
@@ -74,10 +76,12 @@ module LD28
           end
         }
         self.input_press Gosu::KbUp, Proc.new {
+          @player.facing_y = :up
           if @player.last_collision.in_collision_bottom && @player.current_action.nil?
             @player.velocity_y -= 5
             @world.add Smoke.new(@player.pos_x + @player.width / 2, @player.pos_y + @player.height)
           end
+          @world.check_for_door_with @player
         }
         self.input_press Gosu::KbZ, Proc.new {
           if @player.current_action.nil?

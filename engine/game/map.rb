@@ -1,11 +1,13 @@
 class Map
-  @@background = 0xEE00EEFF
+  def initialize
+    @background = 0xEE00EEFF
+  end
 
   def update state, tick
   end
 
   def draw state, game
-    state.set_color @@background
+    state.set_color @background
     state.draw_rect 0, 0, state.game.width, state.game.height
   end
 

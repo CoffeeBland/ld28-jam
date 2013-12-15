@@ -10,6 +10,11 @@ class Camera < AABB
     self.decal_y = 0
   end
 
+  def reset_decals
+    self.decal_x = 0
+    self.decal_y = 0
+  end
+
   def center_on entity
     new_x = entity.pos_x + entity.width / 2 - self.width / 2
     new_y = entity.pos_y + entity.height / 2 - self.height / 2

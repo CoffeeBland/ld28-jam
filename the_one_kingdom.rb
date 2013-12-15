@@ -17,7 +17,7 @@ class Game < Gosu::Window
   # All the setup!
   def initialize
     super @@width, @@height, false
-    self.caption = 'Ludum Dare 28 : You only get one! (And you are the only one Hero)'
+    self.caption = 'Ludum Dare 28 : The One Kingdom'
 
     @time = Gosu::milliseconds
     @pressed_inputs = Hash.new

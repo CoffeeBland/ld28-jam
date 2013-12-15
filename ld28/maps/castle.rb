@@ -2,12 +2,13 @@ require "engine/game/map"
 require "engine/game/entity"
 require "engine/game/character"
 require "engine/game/collisionnable"
+require "engine/game/collisionnable_block"
 
 module LD28
   module Maps
     class Castle < Map
       def initialize
-        @@background = 0x000000FF
+        @background = 0x000000FF
       end
 
       def update state, tick
@@ -16,9 +17,6 @@ module LD28
 
       def draw state, game
         super state, game
-
-        # Objects / Buildings
-        #Images[:castle].draw -300 - state.camera.pos_x, 150 - state.camera.pos_y, 2
 
         # Wall
         state.set_color 0x444444FF
@@ -46,9 +44,8 @@ module LD28
         get_hero_sheet = lambda {
           ImageSheet.new File.join('res', 'images', 'hero.png'), 24, 48, :frames_per_second => 10
         }
-        plain_obj_options = {:gravitates => false, :collides => false, :rebound_factor_y => 0}
 
-        state.player = Hero.new 220, 160, 18, 36, {
+        state.player = LD28::Characters::Hero.new 220, 160, 18, 36, {
             :image_sheet => get_hero_sheet.call,
             :health => 100,
             :image_sheet_offset_x => -3,
@@ -63,22 +60,24 @@ module LD28
           }
 
         # Throne
-        state.world.add Entity.new -276, 302, 24, 24, plain_obj_options
-        state.world.add Entity.new -282, 270, 6, 56, plain_obj_options # dossier
+        state.world.add CollisionnableBlock.new -276, 302, 24, 24
+        state.world.add CollisionnableBlock.new -282, 270, 6, 56
         # Throne pedestal
-        state.world.add Entity.new -300, 326, 144, 6, plain_obj_options
-        state.world.add Entity.new -300, 332, 150, 6, plain_obj_options
-        state.world.add Entity.new -300, 338, 156, 6, plain_obj_options
-        state.world.add Entity.new -300, 344, 162, 6, plain_obj_options
+        state.world.add CollisionnableBlock.new -300, 326, 144, 6
+        state.world.add CollisionnableBlock.new -300, 332, 150, 6
+        state.world.add CollisionnableBlock.new -300, 338, 156, 6
+        state.world.add CollisionnableBlock.new -300, 344, 162, 6
         # Floor
-        state.world.add Entity.new -300, 350, 600, 48, plain_obj_options
+        state.world.add CollisionnableBlock.new -300, 350, 600, 48
         # Left wall
-        state.world.add Entity.new -324, 150, 24, 200, plain_obj_options
+        state.world.add CollisionnableBlock.new -324, 150, 24, 200
         # Right wall
-        state.world.add Entity.new 300, 150, 24, 200, plain_obj_options
+        state.world.add CollisionnableBlock.new 300, 150, 24, 200
         # Door
-        state.world.add Door.new 299, 254, 12, 96, plain_obj_options, Proc.new { |sender, col, world|
-          state.set_current_map :courtyard
+        state.world.add PhysicalDoor.new 299, 254, 12, 96, {
+          :action => Proc.new { |sender, col, world|
+            state.set_current_map :courtyard
+          }
         }
       end
 

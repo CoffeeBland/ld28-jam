@@ -1,4 +1,9 @@
 require "engine/game/character"
 
-class Hero < Character
+module LD28
+  module Characters
+    class Hero < Character
+
+    end
+  end
 end

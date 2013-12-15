@@ -68,4 +68,12 @@ class World
     end
     objs
   end
+
+  def check_for_door_with player
+    self.entities.each do |e|
+      if e.is_a?(GhostDoor) && e.overlaps?(player)
+        e.react_to_character player, self
+      end
+    end
+  end
 end

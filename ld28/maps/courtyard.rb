@@ -1,12 +1,14 @@
 require "engine/game/map"
 require "engine/game/entity"
 require "engine/game/character"
-require "pp"
+require "engine/game/collisionnable_block"
 
 module LD28
   module Maps
     class Courtyard < Map
-      @@background = 0x309BD0FF
+      def initialize
+        @background = 0x309BD0FF
+      end
 
       def update state, tick
         if (tick / 1500) % 3 == 0
@@ -16,6 +18,7 @@ module LD28
         else
           state.player.say nil
         end
+        state.camera.decal_y = 200
       end
 
       def draw state, game
@@ -26,7 +29,8 @@ module LD28
         Images[:desert_bg].draw 768 - state.camera.pos_x, 130 - state.camera.pos_y, 0
 
         # Objects / Buildings
-        Images[:castle].draw -300 - state.camera.pos_x, 150 - state.camera.pos_y, 2
+        Images[:castle].draw -150 - state.camera.pos_x, 150 - state.camera.pos_y, 2
+        Images[:gate].draw -300 - state.camera.pos_x, 150 - state.camera.pos_y, 2
         Images[:gate].draw 300 - state.camera.pos_x, 150 - state.camera.pos_y, 2
 
         # Flooring
@@ -43,7 +47,7 @@ module LD28
         get_hero_sheet = lambda {
           ImageSheet.new File.join('res', 'images', 'homme.png'), 24, 48, :frames_per_second => 10
         }
-        state.player = Hero.new 100, 120, 18, 32,
+        state.player = LD28::Characters::Hero.new 100, 120, 18, 32,
         { :image_sheet => get_hero_sheet.call,
           :health => 100,
           :image_sheet_offset_x => -3,
@@ -51,13 +55,20 @@ module LD28
         state.world.add state.player
         state.world.add Character.new 30, 130, 24, 48, :image_sheet => get_hero_sheet.call, :health => 100
 
-        state.world.add Entity.new 60, 120, 40, 6, {:gravitates => true, :collides => true}
-        state.world.add Entity.new -5000, 350, 10008, 20, {:gravitates => false, :collides => false}
-
-        # Castle
-        state.world.add Entity.new -300, 160, 300, 200, {:gravitates => false, :collides => false}
-        # Gate
-        state.world.add Entity.new 300, 160, 48, 200, {:gravitates => false, :collides => false}
+        # Floor
+        state.world.add CollisionnableBlock.new -5000, 350, 10008, 20
+        # Gate Left
+        state.world.add CollisionnableBlock.new -300, 160, 48, 200
+        # Gate Right
+        state.world.add CollisionnableBlock.new 300, 160, 48, 200
+        # Castle Door
+        state.world.add GhostDoor.new -40, 254, 80, 96, {
+          :action => Proc.new { |sender, world|
+            if sender.is_a?(LD28::Characters::Hero) && sender.facing_y == :up
+              state.set_current_map :castle
+            end
+          }
+        }
       end
 
       def leave state

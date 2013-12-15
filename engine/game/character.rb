@@ -13,6 +13,7 @@ class Character < Entity
   attr_reader :current_action
   attr_accessor :update_anim
   attr_accessor :facing
+  attr_accessor :facing_y
   attr_accessor :landed
   attr_accessor :damaged_duration
 
