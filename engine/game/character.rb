@@ -27,6 +27,9 @@ class Character < Entity
     super delta, world
   end
 
+  def update_anim
+  end
+
   def draw camera
     super camera
 

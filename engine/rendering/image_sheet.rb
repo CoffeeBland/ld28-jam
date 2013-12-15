@@ -84,7 +84,7 @@ class ImageSheet < AABB
 		@width = tileWidth
 		@height = tileHeight
 		@color = 0xffffffff
-		@z_index = options[:z_index].nil? ? 0 : options[:z_index]
+		@z_index = options[:z_index].nil? ? 99 : options[:z_index]
 
 		self.is_repeating = options[:is_repeating].nil? ? true : options[:is_repeating]
 		if options[:frames_per_second] != nil
@@ -107,6 +107,7 @@ class ImageSheet < AABB
 	end
 
 	def draw camera
+
 		self.tiles[self.tile_x][self.tile_y].draw(
 			(self.pos_x - camera.pos_x).round,
 			(self.pos_y - camera.pos_y).round,
