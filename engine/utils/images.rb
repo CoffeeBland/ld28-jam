@@ -29,5 +29,21 @@ module Gosu
       y = (Images.window.height / 2) - (self.height / 2)
       self.draw x, y, 0
     end
+    def self.load_tiles_square window, source, tw, th, tileable
+      img = Image.new window, source
+      tmp_tiles = load_tiles window, img, tw, th, tileable
+
+      tiles_x = img.width / tw
+      tiles_y = img.height / th
+      tiles = Array.new
+
+      for x in 0...tiles_x
+        tiles[x] = Array.new
+        for y in 0...tiles_y
+          tiles[x][y] = tmp_tiles[x + y * tiles_x]
+        end
+      end
+      tiles
+    end
   end
 end

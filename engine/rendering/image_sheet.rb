@@ -50,7 +50,6 @@ class ImageSheet < AABB
 	end
 	def tile_y= val
 		@tile_y = val
-		self.tile_x = 0
 		while @tile_y < 0
 			@tile_y += self.tiles_y
 		end
@@ -61,28 +60,30 @@ class ImageSheet < AABB
 
 	# Utility accessors
 	def tiles_x
-		self.tiles.length
+		@tiles_x
 	end
 	def tiles_y
-		self.tiles[self.tile_x]
+		@tiles_y
 	end
 
 	def initialize imagePath, tileWidth, tileHeight, options = Hash.new
 		if Images[imagePath] == nil
 			@tiles = Images.add(
 				imagePath,
-				Gosu::Image.load_tiles(Images.window, imagePath, tileWidth, tileHeight, true)
+				Gosu::Image.load_tiles_square(Images.window, imagePath, tileWidth, tileHeight, true)
 			)
 		else
 			@tiles = Images[imagePath]
 		end
 		@tile_x = 0
 		@tile_y = 0
+		@tiles_x = @tiles.length
+		@tiles_y = @tiles[0].length
 		@pos_x = 0
 		@pos_y = 0
 		@width = tileWidth
 		@height = tileHeight
-		@color = 0xffffff00
+		@color = 0xffffffff
 		@z_index = options[:z_index].nil? ? 0 : options[:z_index]
 
 		self.is_repeating = true
