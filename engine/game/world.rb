@@ -8,13 +8,15 @@ class World
   attr_accessor :air_friction
   attr_reader :spatial_map
   attr_reader :entities
+  attr_accessor :to_add
 
   def initialize
     @spatial_map = SpatialMap.new TILE_SIZE
     @entities = Set.new
     self.gravity_x = 0
-    self.gravity_y = 0.1
-    self.air_friction = 0.995
+    self.gravity_y = 0.2
+    self.air_friction = 0.975
+    self.to_add = Array.new
   end
 
   def update delta
@@ -32,6 +34,11 @@ class World
     to_remove.each do |entity|
       self.remove entity
     end
+    self.to_add.each do |entity|
+      self.entities.add entity
+      self.spatial_map.put entity
+    end
+    self.to_add.clear
   end
 
   def draw camera
@@ -41,8 +48,7 @@ class World
   end
 
   def add entity
-    self.entities.add entity
-    self.spatial_map.put entity
+    self.to_add.push entity
   end
   def remove entity
     self.entities.delete entity
@@ -54,8 +60,10 @@ class World
   end
 
   def damage_point pos_x, pos_y, radius, source, damage
-    self.spatial_map.within(pos_x, pos_y, radius).delete(source).each do |entity|
-      entity.hit_for damage
+    objs = self.spatial_map.within(pos_x, pos_y, radius).delete(source)
+    objs.each do |entity|
+      entity.hit_for damage, self
     end
+    objs
   end
 end

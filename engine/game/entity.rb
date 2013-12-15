@@ -4,15 +4,7 @@ class Entity < Collisionnable
   attr_accessor :image_sheet
   attr_accessor :image_sheet_offset_x
   attr_accessor :image_sheet_offset_y
-  def health
-    @health
-  end
-  def health= value
-    @health = value
-    if (@health != nil && @health <= 0)
-      self.die
-    end
-  end
+  attr_accessor :health
 
   def should_be_removed
     @should_be_removed
@@ -30,7 +22,7 @@ class Entity < Collisionnable
     @should_be_removed = false
   end
 
-  def die world = nil
+  def die world
     self.remove
   end
 
@@ -38,8 +30,13 @@ class Entity < Collisionnable
     self.image_sheet != nil && self.image_sheet_offset_x != nil && self.image_sheet_offset_y != nil
   end
 
-  def hit_for damage
-    self.health -= damage
+
+  def dead?
+    self.health != nil && self.health <= 0
+  end
+  def hit_for damage, world
+    self.health -= damage unless self.health.nil?
+    self.die world if self.dead?
   end
 
   def update delta, world

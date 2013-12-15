@@ -1,16 +1,16 @@
 require "engine/game/particle"
 require "engine/rendering/image_sheet"
 
-class Smoke < Particle
-  @@width = 12
-  @@height = 12
+class Hit < Particle
+  @@width = 24
+  @@height = 24
   @@gravitates = false
   @@collides = false
   @@can_be_collided = false
-  @@frame_duration = 32
+  @@frame_duration = 24
   @@duration = @@frame_duration * 6
   @@frame_repeat = false
-  @@file = File.join('res', 'images', 'smoke.png')
+  @@file = File.join('res', 'images', 'hit.png')
 
   def initialize pos_x, pos_y
     super (pos_x - @@width / 2), (pos_y - @@height / 2),

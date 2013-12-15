@@ -22,7 +22,7 @@ class Text
     @@lines[text]
   end
 
-  def self.draw lines, x, y, c = 0xff000000, z = 1
+  def self.draw lines, x, y, c = 0xff000000, z = 999
     tmp = 0
     lines.each do |line|
       Text[line].draw x, y + tmp, z, 1, 1, c
@@ -42,7 +42,7 @@ class Text
     if @@bubble_texture == nil
       @@bubble_texture = ImageSheet.new(
         File.join('res', 'images', 'speech_bubble.png'),
-        @@font_size, @@font_size, :z_index => 0.9999
+        @@font_size, @@font_size, :z_index => 998
         )
     end
     start_x = pos_x - width / 2 - @@font_size #* 0.5

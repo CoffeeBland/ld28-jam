@@ -83,16 +83,23 @@ class SpatialMap
       range_y.step @tile_size do |y|
         #get objects in tile
         @map[Coord.new(x, y)].each do |entity|
-          [ #for each corner of the object
-            [entity.pos_x, entity.pos_y], #top left
-            [entity.pos_x + entity.width, entity.pos_y], #top right
-            [entity.pos_x, entity.pos_y + entity.height], #bottom left
-            [entity.pos_x + entity.width, entity.pos_y + entity.height] #bottom right
-          ].each do |point|
-            #if it is in range, add it to the set
-            if (point[0] - pos_x)**2 + (point[1] - pos_y)**2 < radius_squared
-              objects.add entity
-              return
+          if pos_x > entity.pos_x - radius && pos_x < entity.pos_x + entity.width + radius &&
+              pos_y > entity.pos_y && pos_y < entity.pos_y + entity.height ||
+              pos_x > entity.pos_x && pos_x < entity.pos_x + entity.width &&
+              pos_y > entity.pos_y - radius && pos_y < entity.pos_y + entity.height + radius
+            objects.add entity
+          else
+            [ #for each corner of the object
+              [entity.pos_x, entity.pos_y], #top left
+              [entity.pos_x + entity.width, entity.pos_y], #top right
+              [entity.pos_x, entity.pos_y + entity.height], #bottom left
+              [entity.pos_x + entity.width, entity.pos_y + entity.height] #bottom right
+            ].each do |point|
+              #if it is in range, add it to the set
+              if (point[0] - pos_x)**2 + (point[1] - pos_y)**2 < radius_squared
+                objects.add entity
+                break
+              end
             end
           end
         end

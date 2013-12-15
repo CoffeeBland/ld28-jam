@@ -32,8 +32,10 @@ class Collisionnable < AABB
   attr_accessor :collides
   attr_accessor :can_be_collided
 
-  attr_accessor :friction_factor
-  attr_accessor :rebound_factor
+  attr_accessor :friction_factor_x
+  attr_accessor :friction_factor_y
+  attr_accessor :rebound_factor_x
+  attr_accessor :rebound_factor_y
 
   attr_accessor :angle
 
@@ -50,14 +52,17 @@ class Collisionnable < AABB
     self.collides = options[:collides].nil? ? true : options[:collides]
     self.can_be_collided = options[:can_be_collided].nil? ? true : options[:can_be_collided]
 
-    self.friction_factor = options[:friction_factor].nil? ? 0.5 : options[:friction_factor]
-    self.rebound_factor = options[:rebound_factor].nil? ? 0.5 : options[:rebound_factor]
+    self.friction_factor_x = options[:friction_factor_x].nil? ? 0.5 : options[:friction_factor_x]
+    self.friction_factor_y = options[:friction_factor_y].nil? ? 1 : options[:friction_factor_y]
+    self.rebound_factor_x = options[:rebound_factor_x].nil? ? 0.5 : options[:rebound_factor_x]
+    self.rebound_factor_y = options[:rebound_factor_y].nil? ? 0.5 : options[:rebound_factor_y]
 
     self.angle = options[:angle].nil? ? :none : options[:angle]
 
     self.velocity_x = 0.0
     self.velocity_y = 0.0
     self.has_moved = false
+    self.last_collision = Collision.new 0, 0
   end
 
   def aabb
@@ -299,8 +304,8 @@ class Collisionnable < AABB
       # If there is an object to react to
       if col.collision_y != nil
         objs_in_collision.add col.collision_y
-        self.velocity_y *= -col.collision_y.rebound_factor
-        self.velocity_x *= col.collision_y.friction_factor
+        self.velocity_y *= -col.collision_y.rebound_factor_y
+        self.velocity_x *= col.collision_y.friction_factor_x
       else # Otherwise just kill all speed
         self.velocity_y = 0
       end
@@ -317,8 +322,8 @@ class Collisionnable < AABB
           tmp = (self.pos_y + self.height - col.collision_x.pos_y).abs
           self.velocity_y = -(tmp + world.gravity_y * 2)
         else # Otherwise resolve the speed normally
-          self.velocity_x *= -col.collision_x.rebound_factor
-          self.velocity_y *= col.collision_x.friction_factor
+          self.velocity_x *= -col.collision_x.rebound_factor_x
+          self.velocity_y *= col.collision_x.friction_factor_y
         end
       else # Otherwise just kill all speed
         self.velocity_x = 0

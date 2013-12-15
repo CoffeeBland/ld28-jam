@@ -1,6 +1,7 @@
 require "engine/game/map"
 require "engine/game/entity"
 require "engine/game/character"
+require "engine/game/collisionnable"
 
 module LD28
   module Maps
@@ -54,19 +55,19 @@ module LD28
         state.world.add Character.new 30, 130, 24, 48, :image_sheet => get_hero_sheet.call, :health => 100
 
         # Throne
-        state.world.add Entity.new -276, 302, 24, 24, {:gravitates => false, :collides => false}
-        state.world.add Entity.new -282, 270, 6, 56, {:gravitates => false, :collides => false} # dossier
+        state.world.add Entity.new -276, 302, 24, 24, {:gravitates => false, :collides => false, :rebound_factor_y => 0}
+        state.world.add Entity.new -282, 270, 6, 56, {:gravitates => false, :collides => false, :rebound_factor_y => 0} # dossier
         # Throne pedestal
-        state.world.add Entity.new -300, 326, 144, 6, {:gravitates => false, :collides => false}
-        state.world.add Entity.new -300, 332, 150, 6, {:gravitates => false, :collides => false}
-        state.world.add Entity.new -300, 338, 156, 6, {:gravitates => false, :collides => false}
-        state.world.add Entity.new -300, 344, 162, 6, {:gravitates => false, :collides => false}
+        state.world.add Entity.new -300, 326, 144, 6, {:gravitates => false, :collides => false, :rebound_factor_y => 0}
+        state.world.add Entity.new -300, 332, 150, 6, {:gravitates => false, :collides => false, :rebound_factor_y => 0}
+        state.world.add Entity.new -300, 338, 156, 6, {:gravitates => false, :collides => false, :rebound_factor_y => 0}
+        state.world.add Entity.new -300, 344, 162, 6, {:gravitates => false, :collides => false, :rebound_factor_y => 0}
         # Floor
-        state.world.add Entity.new -300, 350, 600, 48, {:gravitates => false, :collides => false}
+        state.world.add Entity.new -300, 350, 600, 48, {:gravitates => false, :collides => false, :rebound_factor_y => 0}
         # Left wall
-        state.world.add Entity.new -324, 150, 24, 200, {:gravitates => false, :collides => false}
+        state.world.add Entity.new -324, 150, 24, 200, {:gravitates => false, :collides => false, :rebound_factor_y => 0}
         # Right wall
-        state.world.add Entity.new 300, 150, 24, 200, {:gravitates => false, :collides => false}
+        state.world.add Entity.new 300, 150, 24, 200, {:gravitates => false, :collides => false, :rebound_factor_y => 0}
         # Door
         # TODO: Add door entity with speciar collide
       end

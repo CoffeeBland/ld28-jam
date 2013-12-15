@@ -4,6 +4,7 @@ require "engine/game/entity"
 require "engine/utils/images"
 require "pp"
 require "ld28/sfx/smoke"
+require "ld28/actions/punch"
 
 module LD28
   module States
@@ -39,27 +40,47 @@ module LD28
         @maps = Hash.new
 
         self.input_down Gosu::KbLeft, Proc.new {
-          if @player.last_collision.in_collision_bottom
-            @player.image_sheet.tile_y = 2
-            @player.velocity_x -= 2
+          multiplier = 1
+          if @player.current_action.nil?
+            @player.facing = :left
           else
-            @player.image_sheet.tile_y = 3
-            @player.velocity_x -= 0.1
+            multiplier *= 0.25
+          end
+          if @player.last_collision.in_collision_bottom
+            @player.velocity_x -= 1 * multiplier
+          else
+            @player.velocity_x -= 0.1 * multiplier
           end
         }
         self.input_down Gosu::KbRight, Proc.new {
-          if @player.last_collision.in_collision_bottom
-            @player.image_sheet.tile_y = 6
-            @player.velocity_x += 2
+          multiplier = 1
+          if @player.current_action.nil?
+            @player.facing = :right
           else
-            @player.image_sheet.tile_y = 7
-            @player.velocity_x += 0.1
+            multiplier *= 0.25
+          end
+          if @player.last_collision.in_collision_bottom
+            @player.velocity_x += 1 * multiplier
+          else
+            @player.velocity_x += 0.1 * multiplier
           end
         }
-        self.input_down Gosu::KbUp, Proc.new {
-          if @player.last_collision.in_collision_bottom
-            @player.velocity_y -= 3
+        self.input_press Gosu::KbUp, Proc.new {
+          if @player.last_collision.in_collision_bottom && @player.current_action.nil?
+            @player.velocity_y -= 5
             @world.add Smoke.new(@player.pos_x + @player.width / 2, @player.pos_y + @player.height)
+          end
+        }
+        self.input_press Gosu::KbZ, Proc.new {
+          if @player.current_action.nil?
+            @player.facing = :left
+            @player.do Punch.new
+          end
+        }
+        self.input_press Gosu::KbX, Proc.new {
+          if @player.current_action.nil?
+            @player.facing = :right
+            @player.do Punch.new
           end
         }
       end
