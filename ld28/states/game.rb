@@ -43,7 +43,10 @@ module LD28
         super
 
         self.input_down Gosu::KbLeft, Proc.new {
-          @player.velocity_x -= 1
+          @player.velocity_x -= 0.5
+        }
+        self.input_down Gosu::KbRight, Proc.new {
+          @player.velocity_x += 0.5
         }
         self.input_down Gosu::KbRight, Proc.new {
           @player.velocity_x += 1
