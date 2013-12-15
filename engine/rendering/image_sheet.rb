@@ -1,4 +1,5 @@
 require "engine/utils/aabb"
+require "engine/utils/images"
 
 class ImageSheet < AABB
 	# Rendering properties
@@ -66,8 +67,15 @@ class ImageSheet < AABB
 		self.tiles[self.tile_x]
 	end
 
-	def initialize window, imagePath, tileWidth, tileHeight, options
-		@tiles = Gosu::Image.load_tiles window, imagePath, tileWidth, tileHeight, true
+	def initialize imagePath, tileWidth, tileHeight, options = Hash.new
+		if Images[imagePath] == nil
+			@tiles = Images.add(
+				imagePath,
+				Gosu::Image.load_tiles(Images.window, imagePath, tileWidth, tileHeight, true)
+			)
+		else
+			@tiles = Images[imagePath]
+		end
 		@tile_x = 0
 		@tile_y = 0
 		@pos_x = 0
@@ -75,7 +83,7 @@ class ImageSheet < AABB
 		@width = tileWidth
 		@height = tileHeight
 		@color = 0xffffff00
-		@z_index = 0
+		@z_index = options[:z_index].nil? ? 0 : options[:z_index]
 
 		self.is_repeating = true
 		if options[:frames_per_second] != nil

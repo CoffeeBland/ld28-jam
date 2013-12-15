@@ -1,14 +1,15 @@
 require "engine/game/entity"
+require "engine/utils/text"
 
 class Character < Entity
   attr_reader :current_action
   def say speech
     @speech = speech
   end
-  def saying
+  def speech
     @speech
   end
-#lol
+
   def do action
     @current_action = action
   end
@@ -27,5 +28,9 @@ class Character < Entity
 
   def draw camera
     super.draw camera
+
+    if self.speech != nil
+      Text.draw_bubble speech, self
+    end
   end
 end
