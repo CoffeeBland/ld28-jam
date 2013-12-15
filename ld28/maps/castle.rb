@@ -26,6 +26,7 @@ module LD28
 
         # Objects / Buildings
         Images[:castle].draw -300 - state.camera.pos_x, 150 - state.camera.pos_y, 2
+        Images[:gate].draw 300 - state.camera.pos_x, 150 - state.camera.pos_y, 2
 
         # Flooring
         state.set_color 0x423600FF
@@ -49,9 +50,13 @@ module LD28
         state.world.add state.player
         state.world.add Character.new 30, 130, 24, 48, :image_sheet => get_hero_sheet.call, :health => 100
 
-        state.world.add Entity.new -300, 160, 300, 200, {:gravitates => false, :collides => false}
         state.world.add Entity.new 60, 120, 40, 6, {:gravitates => true, :collides => true}
         state.world.add Entity.new -5000, 350, 10000, 20, {:gravitates => false, :collides => false}
+
+        # Castle
+        state.world.add Entity.new -300, 160, 300, 200, {:gravitates => false, :collides => false}
+        # Gate
+        state.world.add Entity.new 300, 160, 48, 200, {:gravitates => false, :collides => false}
       end
 
       def leave state

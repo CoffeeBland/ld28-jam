@@ -47,6 +47,7 @@ class Game < Gosu::Window
     Images[:logo] = File.join('res', 'images', 'logo.png')
     Images[:desert_bg] = File.join('res', 'images', 'desert.png')
     Images[:castle] = File.join('res', 'images', 'suchcastle.png')
+    Images[:gate] = File.join('res', 'images', 'suchgate.png')
     Images[:tile1] = File.join('res', 'images', 'tile1.png')
   end
 
