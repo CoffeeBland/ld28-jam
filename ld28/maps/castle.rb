@@ -20,11 +20,13 @@ module LD28
         #Images[:castle].draw -300 - state.camera.pos_x, 150 - state.camera.pos_y, 2
 
         # Wall
-        state.set_color 0xE1E1E1FF
+        state.set_color 0x444444FF
         state.draw_rect -324 - state.camera.pos_x, 126 - state.camera.pos_y, 648, 272
+        state.set_color 0xE1E1E1FF
+        state.draw_rect -300 - state.camera.pos_x, 150 - state.camera.pos_y, 600, 200
         # Door
-        state.set_color 0x585858FF
-        state.draw_rect 288 - state.camera.pos_x, 254 - state.camera.pos_y, 12, 96
+        state.set_color 0x999999FF
+        state.draw_rect 300 - state.camera.pos_x, 254 - state.camera.pos_y, 12, 96
         (0..24).each do |n|
           Images[:tile2].draw -300 + (n * 24) - state.camera.pos_x, 350 - state.camera.pos_y, 1
         end
@@ -65,6 +67,8 @@ module LD28
         state.world.add Entity.new -324, 150, 24, 200, {:gravitates => false, :collides => false}
         # Right wall
         state.world.add Entity.new 300, 150, 24, 200, {:gravitates => false, :collides => false}
+        # Door
+        # TODO: Add door entity with speciar collide
       end
 
       def leave state
