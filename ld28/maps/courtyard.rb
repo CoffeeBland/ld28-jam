@@ -1,6 +1,7 @@
 require "engine/game/map"
 require "engine/game/entity"
 require "engine/game/character"
+require "pp"
 
 module LD28
   module Maps

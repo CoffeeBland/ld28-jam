@@ -1,5 +1,6 @@
 require "set"
 require "engine/utils/spatial_map"
+require "pp"
 
 class World
   TILE_SIZE = 96
@@ -57,6 +58,7 @@ class World
   def reset
     @spatial_map = SpatialMap.new TILE_SIZE
     @entities = Set.new
+    self.to_add.clear
   end
 
   def damage_point pos_x, pos_y, radius, source, damage

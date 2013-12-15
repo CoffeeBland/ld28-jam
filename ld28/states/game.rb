@@ -5,6 +5,7 @@ require "engine/utils/images"
 require "pp"
 require "ld28/sfx/smoke"
 require "ld28/actions/punch"
+require "ld28/maps/courtyard"
 
 module LD28
   module States
@@ -15,6 +16,13 @@ module LD28
       attr_accessor :player
 
       def update delta
+        if @new_map != nil
+          @world.reset
+          @current_map = @maps[@new_map]
+          @current_map.enter self
+          @new_map = nil
+        end
+
         super delta
         @world.update delta
         @camera.center_on @player
@@ -101,9 +109,7 @@ module LD28
       end
 
       def set_current_map map
-        @world.reset
-        @current_map = @maps[map]
-        @current_map.enter self
+        @new_map = map
       end
 
     end

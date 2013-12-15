@@ -31,7 +31,7 @@ class Punch < Action
           source.image_sheet.tile_x = 3
           x = source.pos_x + source.width * @multiplier + (6 * (@multiplier - 0.5))
           y = source.pos_y + source.height - 14
-          world.damage_point(x, y, 4, source, 5).each do |entity|
+          world.damage_point(x, y, 6, source, 5).each do |entity|
             if entity.collides
               entity.velocity_x += 5 * (@multiplier - 0.5)
               entity.velocity_y -= 2

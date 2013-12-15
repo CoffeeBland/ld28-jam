@@ -84,7 +84,6 @@ module LD28
 
       def leave state
         super state
-
       end
 
     end

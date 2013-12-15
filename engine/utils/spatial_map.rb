@@ -3,6 +3,7 @@ require "set"
 Coord = Struct.new(:x,:y)
 
 class SpatialMap
+  attr_reader :objects
 
   def initialize tile_size = 96
     @tile_size = tile_size
