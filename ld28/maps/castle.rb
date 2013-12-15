@@ -44,17 +44,23 @@ module LD28
         super state
 
         get_hero_sheet = lambda {
-          ImageSheet.new File.join('res', 'images', 'homme.png'), 24, 48, :frames_per_second => 10
+          ImageSheet.new File.join('res', 'images', 'hero.png'), 24, 48, :frames_per_second => 10
         }
         plain_obj_options = {:gravitates => false, :collides => false, :rebound_factor_y => 0}
 
-        state.player = Hero.new 220, 160, 18, 32,
-        { :image_sheet => get_hero_sheet.call,
-          :health => 100,
-          :image_sheet_offset_x => -3,
-          :image_sheet_offset_y => -16}
+        state.player = Hero.new 220, 160, 18, 36, {
+            :image_sheet => get_hero_sheet.call,
+            :health => 100,
+            :image_sheet_offset_x => -3,
+            :image_sheet_offset_y => -12
+          }
         state.world.add state.player
-        state.world.add Character.new 30, 130, 24, 48, :image_sheet => get_hero_sheet.call, :health => 100
+        state.world.add Character.new 30, 130, 18, 36, {
+            :image_sheet => get_hero_sheet.call,
+            :health => 100,
+            :image_sheet_offset_x => -3,
+            :image_sheet_offset_y => -12
+          }
 
         # Throne
         state.world.add Entity.new -276, 302, 24, 24, plain_obj_options

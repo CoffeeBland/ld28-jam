@@ -30,8 +30,8 @@ class Punch < Action
       Cue.new(100, Proc.new { |world, source|
           source.image_sheet.tile_x = 3
           x = source.pos_x + source.width * @multiplier + (6 * (@multiplier - 0.5))
-          y = source.pos_y + 18
-          world.damage_point(x, y, 12, source, 5).each do |entity|
+          y = source.pos_y + source.height - 14
+          world.damage_point(x, y, 4, source, 5).each do |entity|
             if entity.collides
               entity.velocity_x += 5 * (@multiplier - 0.5)
               entity.velocity_y -= 2
