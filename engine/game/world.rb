@@ -21,7 +21,7 @@ class World
     to_remove = Array.new
     self.entities.each do |entity|
       if entity.should_be_removed
-        to_remove.add entity
+        to_remove.push entity
       else
         entity.update delta, self
         if entity.collides && entity.has_moved

@@ -30,7 +30,7 @@ class Entity < Collisionnable
     @should_be_removed = false
   end
 
-  def die
+  def die world = nil
     self.remove
   end
 

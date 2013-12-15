@@ -7,7 +7,7 @@ class Particle < Entity
   def initialize pos_x, pos_y, width, height, options = Hash.new
     super pos_x, pos_y, width, height, options
 
-    self.time_remaining = options[:time_remaining].nil? ? 0 : options[:time_remaining]
+    self.time_remaining = options[:duration].nil? ? 0 : options[:duration]
     self.explodes_on_contact = options[:explodes_on_contact].nil? ? true : options[:explodes_on_contact]
   end
 

@@ -86,7 +86,7 @@ class ImageSheet < AABB
 		@color = 0xffffffff
 		@z_index = options[:z_index].nil? ? 0 : options[:z_index]
 
-		self.is_repeating = true
+		self.is_repeating = options[:is_repeating].nil? ? true : options[:is_repeating]
 		if options[:frames_per_second] != nil
 			self.frames_per_second = options[:frames_per_second]
 			self.frameTime = self.frame_duration
