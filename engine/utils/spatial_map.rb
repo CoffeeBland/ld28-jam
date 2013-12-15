@@ -9,12 +9,21 @@ class SpatialMap
     @map = Hash.new
     @objects = Hash.new
   end
-
+  def low_clamp value
+    (value.to_f / @tile_size).floor * @tile_size
+  end
+  def high_clamp value
+    (value.to_f / @tile_size).ceil * @tile_size
+  end
   def put object
-    range_x = object.pos_x.floor..(object.pos_x + object.width)
-    range_y = object.pos_y.floor..(object.pos_y + object.height)
-    @objects[object] = [range_x, range_y]
+    left = self.low_clamp(object.pos_x)
+    right = self.high_clamp(object.pos_x + object.width)
+    top = self.low_clamp(object.pos_y)
+    bottom = self.high_clamp(object.pos_y + object.height)
+    range_x = left..right
+    range_y = top..bottom
 
+    @objects[object] = [range_x, range_y]
     range_x.step @tile_size do |x|
       range_y.step @tile_size do |y|
         pos = Coord.new(x, y)
@@ -48,9 +57,14 @@ class SpatialMap
   end
 
   def get region
+    left = self.low_clamp(region.pos_x)
+    right = self.high_clamp(region.pos_x + region.width)
+    top = self.low_clamp(region.pos_y)
+    bottom = self.high_clamp(region.pos_y + region.height)
+    range_x = left..right
+    range_y = top..bottom
+
     objects = Set.new
-    range_x = region.pos_x.floor..(region.pos_x + region.width)
-    range_y = region.pos_y.floor..(region.pos_y + region.height)
     range_x.step @tile_size  do |x|
       range_y.step @tile_size  do |y|
         tmp_cord = @map[Coord.new(x, y)]
@@ -62,8 +76,8 @@ class SpatialMap
 
   def within pos_x, pos_y, radius
     objects = Set.new
-    range_x = pos_x - radius..pos_x + radius
-    range_y = pos_y - radius..pos_y + radius
+    range_x = self.low_clamp(pos_x - radius)..self.high_clamp(pos_x + radius)
+    range_y = self.low_clamp(pos_y - radius)..self.high_clamp(pos_y + radius)
     radius_squared = radius**2
     range_x.step @tile_size do |x|
       range_y.step @tile_size do |y|

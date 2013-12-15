@@ -1,7 +1,6 @@
 require "engine/state"
 require "engine/game/world"
 require "engine/utils/images"
-require "pp"
 
 module LD28
   module States
@@ -21,6 +20,7 @@ module LD28
         draw_rect 0, 0, @game.width, @game.height
         Images[:desert_bg].draw 0, 60, 0
         Images[:desert_bg].draw 512, 60, 0
+
         @world.draw @camera
       end
 
@@ -35,11 +35,10 @@ module LD28
         hero_img_sheet = ImageSheet.new File.join('res', 'images', 'homme.png'), 24, 48, :frames_per_second => 5
         @player = Hero.new 100, 120, 24, 48, :image_sheet => hero_img_sheet, :health => 100
         @world.add @player
+        #@world.add Entity.new
 
         @camera = Camera.new 0, 0, @game.width, @game.height
         @camera.center_on @player
-
-        pp @world.spatial_map
       end
 
       def leave

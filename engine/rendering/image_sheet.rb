@@ -1,5 +1,6 @@
 require "engine/utils/aabb"
 require "engine/utils/images"
+require "pp"
 
 class ImageSheet < AABB
 	# Rendering properties
@@ -36,11 +37,11 @@ class ImageSheet < AABB
 		end
 		if self.is_repeating
 			if @tile_x >= self.tiles_x
-				@tile_x = self.tiles_x
+				@tile_x -= self.tiles_x
 			end
 		else
 			while @tile_x >= self.tiles_x
-				@tile_x -= self.tiles_x
+				@tile_x = self.tiles_x - 1
 			end
 		end
 	end
@@ -107,6 +108,7 @@ class ImageSheet < AABB
 	end
 
 	def draw camera
+		pp self
 		self.tiles[self.tile_x][self.tile_y].draw self.pos_x - camera.pos_x, self.pos_y - camera.pos_y, self.z_index, 1, 1, self.color
 	end
 end

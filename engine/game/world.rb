@@ -13,7 +13,7 @@ class World
     @spatial_map = SpatialMap.new TILE_SIZE
     @entities = Set.new
     self.gravity_x = 0
-    self.gravity_y = 1
+    self.gravity_y = 0.001
     self.air_friction = 0.995
   end
 
@@ -36,7 +36,9 @@ class World
 
   def draw camera
     self.spatial_map.get(camera).each do |entity|
-      entity.draw camera
+      if entity.is_a? Entity
+        entity.draw camera
+      end
     end
   end
 

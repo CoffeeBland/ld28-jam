@@ -28,7 +28,7 @@ class Character < Entity
   end
 
   def draw camera
-    super.draw camera
+    super camera
 
     if self.speech != nil
       Text.draw_bubble ["0"], self.pos_x + self.width / 2, self.pos_y, camera
