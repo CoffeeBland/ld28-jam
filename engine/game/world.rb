@@ -1,6 +1,7 @@
 require "engine/utils/spatial_map"
 
 class World
+  TILE_SIZE = 96
   attr_accessor :gravity_x
   attr_accessor :gravity_y
   attr_accessor :air_friction
@@ -8,7 +9,7 @@ class World
   attr_reader :entities
 
   def initialize
-    @spatial_map = spatial_map.new
+    @spatial_map = SpatialMap.new TILE_SIZE
     @entities = Array.new
     self.gravity_x = 0
     self.gravity_y = 1
@@ -16,10 +17,10 @@ class World
   end
 
   def update delta
-    toRemove = Array.new
-    self.entites.each do |entity|
+    to_remove = Array.new
+    self.entities.each do |entity|
       if entity.should_be_removed
-        toRemove.add entity
+        to_remove.add entity
       else
         entity.update delta, self
         if entity.collisions && entity.has_moved
@@ -27,7 +28,7 @@ class World
         end
       end
     end
-    toRemove.each do |entity|
+    to_remove.each do |entity|
       self.remove entity
     end
   end

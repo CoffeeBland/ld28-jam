@@ -34,7 +34,7 @@ class Game < Gosu::Window
     @states = {
       :init => LD28::States::Logo.new(self),
       :menu => LD28::States::Menu.new(self),
-      :castle => LD28::States::Castle.new(self)
+      :game => LD28::States::Game.new(self)
     }
     self.switch_to :init
   end

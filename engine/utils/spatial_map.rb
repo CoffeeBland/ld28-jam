@@ -1,5 +1,7 @@
+require "set"
+
 class SpatialMap
-  def initialize tile_size
+  def initialize tile_size = 96
     @tile_size = tile_size
     @map = Hash.new
     @objects = Hash.new
