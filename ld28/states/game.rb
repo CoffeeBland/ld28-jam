@@ -28,8 +28,12 @@ module LD28
         transition 0x000000FF, 0, 1000, @now_in_for
         set_color 0x309BD0FF
         draw_rect 0, 0, @game.width, @game.height
-        Images[:desert_bg].draw 0 - @camera.pos_x, 60 - @camera.pos_y, 0
-        Images[:desert_bg].draw 512 - @camera.pos_x, 60 - @camera.pos_y, 0
+        Images[:desert_bg].draw -768 - @camera.pos_x, 130 - @camera.pos_y, 0
+        Images[:desert_bg].draw 0 - @camera.pos_x, 130 - @camera.pos_y, 0
+        Images[:desert_bg].draw 768 - @camera.pos_x, 130 - @camera.pos_y, 0
+        Images[:castle].draw -300 - @camera.pos_x, 160 - @camera.pos_y, 1
+        set_color 0x1e1e1eFF
+        draw_rect -5000 - @camera.pos_x, 350 - @camera.pos_y, 10000, 20
 
         # BEHOLD! Debugging down here
           @world.draw @camera
@@ -66,7 +70,7 @@ module LD28
         @world.add @player
         @world.add Character.new 30, 130, 24, 48, :image_sheet => omg_sheet, :health => 100
 
-        @world.add Entity.new -100, 0, 20, 350, {:gravitates => false, :collides => false}
+        @world.add Entity.new -300, 160, 300, 200, {:gravitates => false, :collides => false}
         @world.add Entity.new -5000, 350, 10000, 20, {:gravitates => false, :collides => false}
 
         @camera = Camera.new 0, 0, @game.width, @game.height
