@@ -69,6 +69,7 @@ module LD28
         @world = World.new
 
         @maps[:castle] = LD28::Maps::Castle.new
+        @maps[:courtyard] = LD28::Maps::Courtyard.new
         set_current_map :castle
 
         @camera = Camera.new 0, 0, @game.width, @game.height

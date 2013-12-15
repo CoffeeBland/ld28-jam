@@ -49,6 +49,7 @@ class Game < Gosu::Window
     Images[:castle] = File.join('res', 'images', 'suchcastle.png')
     Images[:gate] = File.join('res', 'images', 'suchgate.png')
     Images[:tile1] = File.join('res', 'images', 'tile1.png')
+    Images[:tile2] = File.join('res', 'images', 'tile2.png')
   end
 
   def init_font
