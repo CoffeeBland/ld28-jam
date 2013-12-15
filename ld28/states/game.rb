@@ -1,5 +1,6 @@
 require "engine/state"
 require "engine/game/world"
+require "engine/game/entity"
 require "engine/utils/images"
 
 module LD28
@@ -35,7 +36,7 @@ module LD28
         hero_img_sheet = ImageSheet.new File.join('res', 'images', 'homme.png'), 24, 48, :frames_per_second => 5
         @player = Hero.new 100, 120, 24, 48, :image_sheet => hero_img_sheet, :health => 100
         @world.add @player
-        #@world.add Entity.new
+        @world.add Entity.new 0, 300, 600, 20, {:gravitates => false, :collides => false}
 
         @camera = Camera.new 0, 0, @game.width, @game.height
         @camera.center_on @player

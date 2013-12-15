@@ -1,4 +1,5 @@
 require "engine/utils/aabb"
+require "pp"
 
 class Collision
   attr_accessor :collision_x
@@ -112,20 +113,25 @@ class Collisionnable < AABB
     position_y + self.height - entity.pos_y > -DISTANCE_TOLERANCE
   end
 
-  def determineCollision entity, velocity_x, velocity_y
-    case self.angle
+  def determine_collision entity, velocity_x, velocity_y
+    case entity.angle
     when :none
-      determineStraightCollision entity, velocity_x, velocity_y
+      self.determine_straight_collision entity, velocity_x, velocity_y
     when :diagonal_tl_br
       if self.pos_x <= entity.pos_x ||
           self.pos_y >= (entity.pos_y + entity.height)
-        determineStraightCollision entity, velocity_x, velocity_y
+        self.determine_straight_collision entity, velocity_x, velocity_y
       end
-      determine entity, velocity_x, velocity_y
+      self.determine_tl_br_collision entity, velocity_x, velocity_y
     when :diagonal_tr_bl
+      if self.pos_x + self.width >= entity.pos_x + entity.width ||
+          self.pos_y >= (entity.pos_y + entity.height)
+        self.determine_straight_collision entity, velocity_x, velocity_y
+      end
+      self.determine_tr_bl_collision entity, velocity_x, velocity_y
     end
   end
-  def determineStraightCollision entity, velocity_x, velocity_y
+  def determine_straight_collision entity, velocity_x, velocity_y
     col = Collision.new velocity_x, velocity_y
 
     if velocity_x > 0
@@ -203,7 +209,7 @@ class Collisionnable < AABB
     end
     col
   end
-  def shortestCollision col1, col2
+  def shortest_collision col1, col2
     col = Collision.new 0, 0
 
     # X axis
@@ -237,7 +243,7 @@ class Collisionnable < AABB
   end
 
   def update delta, world
-    self.applyWorldForces world.gravity_x, world.gravity_y, world.air_friction
+    self.apply_world_forces world.gravity_x, world.gravity_y, world.air_friction
 
     col = Collision.new self.velocity_x, self.velocity_y
 
@@ -252,7 +258,7 @@ class Collisionnable < AABB
     if self.collides
       world.spatial_map.get(self.aabb).each do |entity|
         if entity != self && entity.can_be_collided
-          col = self.shortestCollision(col, determineCollision(entity, col.distance_x, col.distance_y))
+          col = self.shortest_collision(col, self.determine_collision(entity, col.distance_x, col.distance_y))
         end
       end
     end
@@ -263,11 +269,11 @@ class Collisionnable < AABB
       self.pos_y = position_y
     end
 
-    self.resolveCollision col, world
+    self.resolve_collision col, world
     self.has_moved = col.distance_x != 0 || col.distance_y != 0
     self.last_collision = col
   end
-  def applyWorldForces gravity_x, gravity_y, air_friction
+  def apply_world_forces gravity_x, gravity_y, air_friction
     if self.gravitates
       self.velocity_x += gravity_x
       self.velocity_y += gravity_y
@@ -278,7 +284,7 @@ class Collisionnable < AABB
     end
   end
 
-  def resolveCollision col, world
+  def resolve_collision col, world
     objsin_collision = Set.new
 
     # Y-axis
