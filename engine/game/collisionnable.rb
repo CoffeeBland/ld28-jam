@@ -50,8 +50,8 @@ class Collisionnable < AABB
     self.collides = options[:collides].nil? ? true : options[:collides]
     self.can_be_collided = options[:can_be_collided].nil? ? true : options[:can_be_collided]
 
-    self.friction_factor = options[:friction_factor].nil? ? 0 : options[:friction_factor]
-    self.rebound_factor = options[:rebound_factor].nil? ? 0 : options[:rebound_factor]
+    self.friction_factor = options[:friction_factor].nil? ? 0.5 : options[:friction_factor]
+    self.rebound_factor = options[:rebound_factor].nil? ? 0.5 : options[:rebound_factor]
 
     self.angle = options[:angle].nil? ? :none : options[:angle]
 
@@ -70,7 +70,7 @@ class Collisionnable < AABB
     set = world.spatial_map.get AABB.new pos_x, pos_y, self.width, self.height
     set.delete self
     set.each do |entity|
-      if entity.can_be_collided
+      if entity.can_be_collided && self.in_collision_entity?(entity, pos_x, pos_y)
         case entity.angle
         when :none
           return true
@@ -105,12 +105,12 @@ class Collisionnable < AABB
     y_aligned?(entity, position_x, position_y)
   end
   def x_aligned? entity, position_x, position_y
-    position_x - entity.pos_x + entity.width < DISTANCE_TOLERANCE &&
-    position_x + self.width - entity.pos_x > -DISTANCE_TOLERANCE
+    position_x - (entity.pos_x + entity.width) < DISTANCE_TOLERANCE &&
+    (position_x + self.width) - entity.pos_x > -DISTANCE_TOLERANCE
   end
   def y_aligned? entity, position_x, position_y
-    position_y - entity.pos_y + entity.height < DISTANCE_TOLERANCE &&
-    position_y + self.height - entity.pos_y > -DISTANCE_TOLERANCE
+    position_y - (entity.pos_y + entity.height) < DISTANCE_TOLERANCE &&
+    (position_y + self.height) - entity.pos_y > -DISTANCE_TOLERANCE
   end
 
   def determine_collision entity, velocity_x, velocity_y
@@ -161,7 +161,7 @@ class Collisionnable < AABB
           tmpY < velocity_y &&
           self.x_aligned?(entity, pos_x + tmpX, pos_y + tmpY)
         col.distance_y = tmpY
-        col.in_collision_top = true
+        col.in_collision_bottom = true
         col.collision_y = entity
       end
     elsif velocity_y < 0
@@ -171,10 +171,12 @@ class Collisionnable < AABB
           tmpY > velocity_y &&
           self.x_aligned?(entity, pos_x + tmpX, pos_y + tmpY)
         col.distance_y = tmpY
-        col.in_collision_bottom = true
+        col.in_collision_top = true
         col.collision_y = entity
       end
     end
+
+    col
   end
   def determine_tl_br_collision entity, velocity_x, velocity_y
     col = Collision.new velocity_x, velocity_y
@@ -214,7 +216,7 @@ class Collisionnable < AABB
 
     # X axis
     if col1.distance_x > 0 && col2.distance_x < col1.distance_x ||
-        col1.distance_x < 0 && col2.distance_x > col.distance_x
+        col1.distance_x < 0 && col2.distance_x > col1.distance_x
       col.distance_x = col2.distance_x
       col.in_collision_left = col2.in_collision_left
       col.in_collision_right = col2.in_collision_right
@@ -228,7 +230,7 @@ class Collisionnable < AABB
 
     # Y axis
     if col1.distance_y > 0 && col2.distance_y < col1.distance_y ||
-        col1.distance_y < 0 && col2.distance_y > col.distance_y
+        col1.distance_y < 0 && col2.distance_y > col1.distance_y
       col.distance_y = col2.distance_y
       col.in_collision_top = col2.in_collision_top
       col.in_collision_bottom = col2.in_collision_bottom
@@ -285,16 +287,20 @@ class Collisionnable < AABB
   end
 
   def resolve_collision col, world
-    objsin_collision = Set.new
+    objs_in_collision = Set.new
 
     # Y-axis
     if col.in_collision_bottom || col.in_collision_top
-      objsin_collision.add self
+      objs_in_collision.add self
       # If there is an object to react to
-      if col.collision_y != null
-        objsin_collision.add col.collision_y
+      if col.collision_y != nil
+        objs_in_collision.add col.collision_y
         self.velocity_y *= -col.collision_y.rebound_factor
-        self.velocity_x *= col.collision_y.friction_factor
+        if self.velocity_x != 0
+          puts self.velocity_x
+          self.velocity_x *= col.collision_y.friction_factor
+          puts self.velocity_x
+        end
       else # Otherwise just kill all speed
         self.velocity_y = 0
       end
@@ -302,10 +308,11 @@ class Collisionnable < AABB
 
     # X-axis
     if col.in_collision_right || col.in_collision_left
-      objsin_collision.add self
+      #pp col
+      objs_in_collision.add self
       # If there is an object to react to
-      if col.collision_x != null
-        objsin_collision.add col.collision_x
+      if col.collision_x != nil
+        objs_in_collision.add col.collision_x
         # Check if there should be a step up to do
         if self.pos_y + self.height - STEP_MAXIMUM <= col.collision_x.pos_y
           tmp = (self.pos_y + self.height - col.collision_x.pos_y).abs
@@ -319,7 +326,7 @@ class Collisionnable < AABB
       end
     end
 
-    objsin_collision.each do |entity|
+    objs_in_collision.each do |entity|
       entity.react_to_collision col, world
     end
   end
