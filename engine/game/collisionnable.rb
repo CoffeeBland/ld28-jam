@@ -315,7 +315,7 @@ class Collisionnable < AABB
         # Check if there should be a step up to do
         if self.pos_y + self.height - STEP_MAXIMUM <= col.collision_x.pos_y
           tmp = (self.pos_y + self.height - col.collision_x.pos_y).abs
-          self.velocity_y = -(tmp + world.gravity_y)
+          self.velocity_y = -(tmp + world.gravity_y * 2)
         else # Otherwise resolve the speed normally
           self.velocity_x *= -col.collision_x.rebound_factor
           self.velocity_y *= col.collision_x.friction_factor

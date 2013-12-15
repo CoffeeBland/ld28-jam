@@ -49,7 +49,7 @@ module LD28
         self.input_down Gosu::KbLeft, Proc.new {
           if @player.last_collision.in_collision_bottom
             @player.image_sheet.tile_y = 2
-            @player.velocity_x -= 1
+            @player.velocity_x -= 2
           else
             @player.image_sheet.tile_y = 3
             @player.velocity_x -= 0.1
@@ -58,7 +58,7 @@ module LD28
         self.input_down Gosu::KbRight, Proc.new {
           if @player.last_collision.in_collision_bottom
             @player.image_sheet.tile_y = 6
-            @player.velocity_x += 1
+            @player.velocity_x += 2
           else
             @player.image_sheet.tile_y = 7
             @player.velocity_x += 0.1
@@ -66,7 +66,7 @@ module LD28
         }
         self.input_down Gosu::KbUp, Proc.new {
           if @player.last_collision.in_collision_bottom
-            @player.velocity_y -= 4
+            @player.velocity_y -= 6
           end
         }
       end
@@ -75,13 +75,18 @@ module LD28
         super
         @world = World.new
 
-        hero_img_sheet = ImageSheet.new File.join('res', 'images', 'homme.png'), 24, 48, :frames_per_second => 5
-        omg_sheet = ImageSheet.new File.join('res', 'images', 'homme.png'), 24, 48, :frames_per_second => 5
-        @player = Hero.new 100, 120, 24, 48, :image_sheet => hero_img_sheet, :health => 100
+        hero_img_sheet = ImageSheet.new File.join('res', 'images', 'homme.png'), 24, 48, :frames_per_second => 10
+        omg_sheet = ImageSheet.new File.join('res', 'images', 'homme.png'), 24, 48, :frames_per_second => 10
+        @player = Hero.new 100, 120, 18, 32,
+        { :image_sheet => hero_img_sheet,
+          :health => 100,
+          :image_sheet_offset_x => -3,
+          :image_sheet_offset_y => -16}
         @world.add @player
         @world.add Character.new 30, 130, 24, 48, :image_sheet => omg_sheet, :health => 100
 
         @world.add Entity.new -300, 160, 300, 200, {:gravitates => false, :collides => false}
+        @world.add Entity.new 60, 120, 40, 6, {:gravitates => true, :collides => true}
         @world.add Entity.new -5000, 350, 10000, 20, {:gravitates => false, :collides => false}
 
         @camera = Camera.new 0, 0, @game.width, @game.height
