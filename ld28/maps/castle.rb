@@ -46,6 +46,8 @@ module LD28
         get_hero_sheet = lambda {
           ImageSheet.new File.join('res', 'images', 'homme.png'), 24, 48, :frames_per_second => 10
         }
+        plain_obj_options = {:gravitates => false, :collides => false, :rebound_factor_y => 0}
+
         state.player = Hero.new 220, 160, 18, 32,
         { :image_sheet => get_hero_sheet.call,
           :health => 100,
@@ -55,21 +57,23 @@ module LD28
         state.world.add Character.new 30, 130, 24, 48, :image_sheet => get_hero_sheet.call, :health => 100
 
         # Throne
-        state.world.add Entity.new -276, 302, 24, 24, {:gravitates => false, :collides => false, :rebound_factor_y => 0}
-        state.world.add Entity.new -282, 270, 6, 56, {:gravitates => false, :collides => false, :rebound_factor_y => 0} # dossier
+        state.world.add Entity.new -276, 302, 24, 24, plain_obj_options
+        state.world.add Entity.new -282, 270, 6, 56, plain_obj_options # dossier
         # Throne pedestal
-        state.world.add Entity.new -300, 326, 144, 6, {:gravitates => false, :collides => false, :rebound_factor_y => 0}
-        state.world.add Entity.new -300, 332, 150, 6, {:gravitates => false, :collides => false, :rebound_factor_y => 0}
-        state.world.add Entity.new -300, 338, 156, 6, {:gravitates => false, :collides => false, :rebound_factor_y => 0}
-        state.world.add Entity.new -300, 344, 162, 6, {:gravitates => false, :collides => false, :rebound_factor_y => 0}
+        state.world.add Entity.new -300, 326, 144, 6, plain_obj_options
+        state.world.add Entity.new -300, 332, 150, 6, plain_obj_options
+        state.world.add Entity.new -300, 338, 156, 6, plain_obj_options
+        state.world.add Entity.new -300, 344, 162, 6, plain_obj_options
         # Floor
-        state.world.add Entity.new -300, 350, 600, 48, {:gravitates => false, :collides => false, :rebound_factor_y => 0}
+        state.world.add Entity.new -300, 350, 600, 48, plain_obj_options
         # Left wall
-        state.world.add Entity.new -324, 150, 24, 200, {:gravitates => false, :collides => false, :rebound_factor_y => 0}
+        state.world.add Entity.new -324, 150, 24, 200, plain_obj_options
         # Right wall
-        state.world.add Entity.new 300, 150, 24, 200, {:gravitates => false, :collides => false, :rebound_factor_y => 0}
+        state.world.add Entity.new 300, 150, 24, 200, plain_obj_options
         # Door
-        # TODO: Add door entity with speciar collide
+        state.world.add Door.new 299, 254, 12, 96, plain_obj_options, Proc.new { |sender, col, world|
+          state.set_current_map :courtyard
+        }
       end
 
       def leave state

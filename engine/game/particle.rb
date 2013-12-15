@@ -19,8 +19,8 @@ class Particle < Entity
     end
   end
 
-  def react_to_collision col, world
-    super col, world
+  def react_to_collision sender, col, world
+    super sender, col, world
 
     if self.explodes_on_contact
       self.die world

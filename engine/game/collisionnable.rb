@@ -331,10 +331,10 @@ class Collisionnable < AABB
     end
 
     objs_in_collision.each do |entity|
-      entity.react_to_collision col, world
+      entity.react_to_collision self, col, world
     end
   end
-  def react_to_collision col, world
+  def react_to_collision sender, col, world
 
   end
 end

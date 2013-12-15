@@ -39,13 +39,15 @@ class SpatialMap
 
   def remove object
     tiles = @objects.delete object
-    tiles[0].step @tile_size do |x|
-      tiles[1].step @tile_size do |y|
-        pos = Coord.new(x, y)
-        objects = @map[pos]
-        objects.delete object
-        if objects.length == 0
-          @map[pos].delete objects
+    unless tiles.nil?
+      tiles[0].step @tile_size do |x|
+        tiles[1].step @tile_size do |y|
+          pos = Coord.new(x, y)
+          objects = @map[pos]
+          objects.delete object
+          if objects.length == 0
+            @map[pos].delete objects
+          end
         end
       end
     end
