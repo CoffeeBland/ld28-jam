@@ -5,7 +5,7 @@ class Text
   @@window = nil
   @@lines = Hash.new
   @@bubble_texture = nil
-  @@font_size = 16
+  @@font_size = 20
 
   def self.window= obj
     @@window = obj
@@ -29,18 +29,29 @@ class Text
       tmp += (@@font_size).round
     end
   end
-  def self.draw_bubble lines, pos_x, pos_y, width, height, camera
-    #puts "begin"
+  def self.draw_bubble lines, pos_x, pos_y, camera
+    width = 0
+    lines.each do |line|
+      width = [Text[line].width, width].max
+    end
+    line_dif = width
+    width = (width.to_f / @@font_size).ceil * @@font_size
+    line_dif = width - line_dif
+    height = lines.length * @@font_size
+
     if @@bubble_texture == nil
       @@bubble_texture = ImageSheet.new(
         File.join('res', 'images', 'speech_bubble.png'),
         @@font_size, @@font_size, :z_index => 0.9999
         )
     end
-    start_x = pos_x - width / 2 - @@font_size
-    start_y = pos_y - height - @@font_size
-    max_x = start_x + width + @@font_size * 2
-    max_y = start_y + height + @@font_size * 2
+    start_x = pos_x - width / 2 - @@font_size * 0.5
+    start_y = pos_y - height - @@font_size * 2
+    max_x = start_x + width + @@font_size
+    max_y = start_y + height + @@font_size
+
+    self.draw lines, start_x + @@font_size + line_dif / 2, start_y + @@font_size
+
     (start_x..max_x).step @@font_size do |x|
       @@bubble_texture.tile_x = (x <= start_x) ? 0 : (x < max_x) ? 1 : 2
       @@bubble_texture.pos_x = x
@@ -55,6 +66,5 @@ class Text
     @@bubble_texture.pos_x = (start_x + max_x) / 2
     @@bubble_texture.tile_y = 3
     @@bubble_texture.draw camera
-    self.draw lines, start_x + @@font_size, start_y + @@font_size
   end
 end

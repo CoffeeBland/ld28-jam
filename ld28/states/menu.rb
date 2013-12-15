@@ -15,7 +15,6 @@ module LD28
         draw_rect 0, 0, @game.width, @game.height
         Text.draw ["Le One Kingdom"], 50, 50, 0xff000000
         Text.draw ["Press the enter key to play"], 50, @game.height - 50, 0xff000000
-        Text.draw_bubble ["Yo", "is it workin?"], 300, 300, 32, 32, (Camera.new 0, 0, 640, 480)
         if @exit_at
           transition 0x00000000, @exit_at - 1000, @exit_at, @now_in_for
           if @now_in_for > @exit_at
