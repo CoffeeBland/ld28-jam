@@ -1,6 +1,9 @@
 require "set"
 
+Coord = Struct.new(:x,:y)
+
 class SpatialMap
+
   def initialize tile_size = 96
     @tile_size = tile_size
     @map = Hash.new
@@ -14,10 +17,11 @@ class SpatialMap
 
     range_x.step @tile_size do |x|
       range_y.step @tile_size do |y|
-        elements = @map[[x, y]]
+        pos = Coord.new(x, y)
+        elements = @map[pos]
         if elements == nil
           elements = Array.new
-          @map[[x, y]] = elements
+          @map[pos] = elements
         end
         elements.push object
       end
@@ -28,10 +32,11 @@ class SpatialMap
     tiles = @objects.delete object
     tiles[0].step @tile_size do |x|
       tiles[1].step @tile_size do |y|
-        objects = @map[[x, y]]
+        pos = Coord.new(x, y)
+        objects = @map[pos]
         objects.delete object
         if objects.length == 0
-          @map[[x, y]].delete objects
+          @map[pos].delete objects
         end
       end
     end
@@ -48,7 +53,8 @@ class SpatialMap
     range_y = region.pos_y.floor..(region.pos_y + region.height)
     range_x.step @tile_size  do |x|
       range_y.step @tile_size  do |y|
-        objects.concat @map[[x, y]]
+        tmp_cord = @map[Coord.new(x, y)]
+        objects.merge tmp_cord unless tmp_cord.nil?
       end
     end
     objects
@@ -62,7 +68,7 @@ class SpatialMap
     range_x.step @tile_size do |x|
       range_y.step @tile_size do |y|
         #get objects in tile
-        @map[[x, y]].each do |entity|
+        @map[Coord.new(x, y)].each do |entity|
           [ #for each corner of the object
             [entity.pos_x, entity.pos_y], #top left
             [entity.pos_x + entity.width, entity.pos_y], #top right
