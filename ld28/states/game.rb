@@ -69,6 +69,7 @@ module LD28
         set_current_map :castle
 
         @camera = Camera.new 0, 0, @game.width, @game.height
+        @camera.decal_y = -150
       end
 
       def leave

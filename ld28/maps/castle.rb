@@ -20,37 +20,38 @@ module LD28
       def draw state, game
         super state, game
         # BG
-        Images[:desert_bg].draw -768 - state.camera.pos_x, 280 - state.camera.pos_y, 0
-        Images[:desert_bg].draw 0 - state.camera.pos_x, 280 - state.camera.pos_y, 0
-        Images[:desert_bg].draw 768 - state.camera.pos_x, 280 - state.camera.pos_y, 0
+        Images[:desert_bg].draw -768 - state.camera.pos_x, 130 - state.camera.pos_y, 0
+        Images[:desert_bg].draw 0 - state.camera.pos_x, 130 - state.camera.pos_y, 0
+        Images[:desert_bg].draw 768 - state.camera.pos_x, 130 - state.camera.pos_y, 0
 
         # Objects / Buildings
-        Images[:castle].draw -300 - state.camera.pos_x, 300 - state.camera.pos_y, 2
+        Images[:castle].draw -300 - state.camera.pos_x, 150 - state.camera.pos_y, 2
 
         # Flooring
         state.set_color 0x423600FF
-        state.draw_rect -5000 - state.camera.pos_x, 500 - state.camera.pos_y, 10000, 2000
+        state.draw_rect -5000 - state.camera.pos_x, 350 - state.camera.pos_y, 10000, 2000
         (0..416).each do |n|
-          Images[:tile1].draw -5000 + (n * 24) - state.camera.pos_x, 500 - state.camera.pos_y, 1
+          Images[:tile1].draw -5000 + (n * 24) - state.camera.pos_x, 350 - state.camera.pos_y, 1
         end
       end
 
       def enter state
         super state
 
-        his = ImageSheet.new(File.join('res', 'images', 'homme.png'), 24, 48, {:frames_per_second => 10})
-        ris = ImageSheet.new(File.join('res', 'images', 'homme.png'), 24, 48, {:frames_per_second => 10})
-        state.player = Hero.new 100, 270, 18, 32,
-        { :image_sheet => his,
+        get_hero_sheet = lambda {
+          ImageSheet.new File.join('res', 'images', 'homme.png'), 24, 48, :frames_per_second => 10
+        }
+        state.player = Hero.new 100, 120, 18, 32,
+        { :image_sheet => get_hero_sheet.call,
           :health => 100,
           :image_sheet_offset_x => -3,
           :image_sheet_offset_y => -16}
         state.world.add state.player
-        state.world.add Character.new 30, 280, 24, 48, :image_sheet => ris, :health => 100
+        state.world.add Character.new 30, 130, 24, 48, :image_sheet => get_hero_sheet.call, :health => 100
 
-        state.world.add Entity.new -300, 310, 300, 200, {:gravitates => false, :collides => false}
-        state.world.add Entity.new 60, 270, 40, 6, {:gravitates => true, :collides => true}
-        state.world.add Entity.new -5000, 500, 10000, 20, {:gravitates => false, :collides => false}
+        state.world.add Entity.new -300, 160, 300, 200, {:gravitates => false, :collides => false}
+        state.world.add Entity.new 60, 120, 40, 6, {:gravitates => true, :collides => true}
+        state.world.add Entity.new -5000, 350, 10000, 20, {:gravitates => false, :collides => false}
       end
 
       def leave state
