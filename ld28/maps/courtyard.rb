@@ -18,7 +18,6 @@ module LD28
         else
           state.player.say nil
         end
-        state.camera.decal_y = 200
       end
 
       def draw state, game

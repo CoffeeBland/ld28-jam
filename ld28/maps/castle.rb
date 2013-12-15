@@ -12,7 +12,11 @@ module LD28
       end
 
       def update state, tick
-        #state.player.say nil
+        if (tick / 3000) % 2 == 1
+          @king.say ['I am the ONLY King!']
+        else
+          @king.say nil
+        end
       end
 
       def draw state, game
@@ -41,23 +45,28 @@ module LD28
       def enter state
         super state
 
-        get_hero_sheet = lambda {
-          ImageSheet.new File.join('res', 'images', 'hero.png'), 24, 48, :frames_per_second => 10
+        get_hero_sheet = lambda { |img_name|
+          ImageSheet.new File.join('res', 'images', img_name + '.png'), 24, 48, :frames_per_second => 10
         }
 
-        state.player = LD28::Characters::Hero.new 220, 160, 18, 36, {
-            :image_sheet => get_hero_sheet.call,
+        @hero_init_pos_x = @hero_init_pos_x.nil? ? (-300 + 8*24) : (300-48)
+        @hero_init_pos_y = (350 - (3*24))
+
+        state.player = LD28::Characters::Hero.new @hero_init_pos_x, @hero_init_pos_y, 18, 36, {
+            :image_sheet => get_hero_sheet.call('hero'),
             :health => 100,
             :image_sheet_offset_x => -3,
             :image_sheet_offset_y => -12
           }
         state.world.add state.player
-        state.world.add Character.new 30, 130, 18, 36, {
-            :image_sheet => get_hero_sheet.call,
+        @king = Character.new (-299 + 1*24), (350 - 5*24), 18, 32, {
+            :image_sheet => get_hero_sheet.call('homme'),
             :health => 100,
             :image_sheet_offset_x => -3,
-            :image_sheet_offset_y => -12
+            :image_sheet_offset_y => -16
           }
+        @king.facing = :right
+        state.world.add @king
 
         # Throne
         state.world.add CollisionnableBlock.new -276, 302, 24, 24
