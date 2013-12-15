@@ -65,8 +65,8 @@ class Collisionnable < AABB
       self.width + self.velocity_x.abs,
       self.height + self.velocity_y.abs
   end
-  def in_collision? world, pos_x, pos_y
-    set = world.spatial_map.get aabb.new pos_x, pos_y, self.width, self.height
+  def in_collision_world? world, pos_x, pos_y
+    set = world.spatial_map.get AABB.new pos_x, pos_y, self.width, self.height
     set.delete self
     set.each do |entity|
       if entity.can_be_collided
@@ -98,24 +98,24 @@ class Collisionnable < AABB
     end
     false
   end
-  def in_collision? entity, positionX, positionY
+  def in_collision_entity? entity, position_x, position_y
     entity.can_be_collided &&
-    xAligned?(entity, positionX, positionY) &&
-    yAligned?(entity, positionX, positionY)
+    x_aligned?(entity, position_x, position_y) &&
+    y_aligned?(entity, position_x, position_y)
   end
-  def xAligned? entity, positionX, positionY
-    positionX - entity.pos_x + entity.width < DISTANCE_TOLERANCE &&
-    positionX + self.width - entity.pos_x > -DISTANCE_TOLERANCE
+  def x_aligned? entity, position_x, position_y
+    position_x - entity.pos_x + entity.width < DISTANCE_TOLERANCE &&
+    position_x + self.width - entity.pos_x > -DISTANCE_TOLERANCE
   end
-  def yAligned? entity, positionX, positionY
-    positionY - entity.pos_y + entity.height < DISTANCE_TOLERANCE &&
-    positionY + self.height - entity.pos_y > -DISTANCE_TOLERANCE
+  def y_aligned? entity, position_x, position_y
+    position_y - entity.pos_y + entity.height < DISTANCE_TOLERANCE &&
+    position_y + self.height - entity.pos_y > -DISTANCE_TOLERANCE
   end
 
   def determineCollision entity, velocity_x, velocity_y
     case self.angle
     when :none
-      determineStraightCollision? entity, velocity_x, velocity_y
+      determineStraightCollision entity, velocity_x, velocity_y
     when :diagonal_tl_br
       if self.pos_x <= entity.pos_x ||
           self.pos_y >= (entity.pos_y + entity.height)
@@ -133,7 +133,7 @@ class Collisionnable < AABB
       tmpY = velocity_y * tmpX / velocity_x
       if tmpX > -DISTANCE_TOLERANCE &&
           tmpX < velocity_x &&
-          self.yAligned?(entity, pos_x + tmpX, pos_y + tmpY)
+          self.y_aligned?(entity, pos_x + tmpX, pos_y + tmpY)
         col.distance_x = tmpX
         col.in_collision_right = true
         col.collision_x = entity
@@ -143,7 +143,7 @@ class Collisionnable < AABB
       tmpY = velocity_y * tmpX / velocity_x
       if tmpX < DISTANCE_TOLERANCE &&
           tmpX > velocity_x &&
-          self.yAligned?(entity, pos_x + tmpX, pos_y + tmpY)
+          self.y_aligned?(entity, pos_x + tmpX, pos_y + tmpY)
         col.distance_x = tmpX
         col.in_collision_left = true
         col.collision_x = entity
@@ -153,7 +153,7 @@ class Collisionnable < AABB
       tmpX = velocity_x * tmpY / velocity_y
       if tmpY > -DISTANCE_TOLERANCE &&
           tmpY < velocity_y &&
-          self.xAligned?(entity, pos_x + tmpX, pos_y + tmpY)
+          self.x_aligned?(entity, pos_x + tmpX, pos_y + tmpY)
         col.distance_y = tmpY
         col.in_collision_top = true
         col.collision_y = entity
@@ -163,7 +163,7 @@ class Collisionnable < AABB
       tmpX = velocity_x * tmpY / velocity_y
       if tmpY < DISTANCE_TOLERANCE &&
           tmpY > velocity_y &&
-          self.xAligned?(entity, pos_x + tmpX, pos_y + tmpY)
+          self.x_aligned?(entity, pos_x + tmpX, pos_y + tmpY)
         col.distance_y = tmpY
         col.in_collision_bottom = true
         col.collision_y = entity
@@ -239,7 +239,7 @@ class Collisionnable < AABB
   def update delta, world
     self.applyWorldForces world.gravity_x, world.gravity_y, world.air_friction
 
-    col = collision.new self.velocity_x, self.velocity_y
+    col = Collision.new self.velocity_x, self.velocity_y
 
     # If the speed is 0, no need to check collisions
     if self.velocity_x == 0 && self.velocity_y == 0
@@ -256,14 +256,14 @@ class Collisionnable < AABB
         end
       end
     end
-    positionX = self.positionX + col.distance_x
-    positionY = self.positionY + col.distance_y
-    if (!in_collision world, positionX, positionY)
-      self.pos_x = positionX
-      self.pos_y = positionY
+    position_x = self.pos_x + col.distance_x
+    position_y = self.pos_y + col.distance_y
+    if (!in_collision_world? world, position_x, position_y)
+      self.pos_x = position_x
+      self.pos_y = position_y
     end
 
-    self.resolveCollision col
+    self.resolveCollision col, world
     self.has_moved = col.distance_x != 0 || col.distance_y != 0
     self.last_collision = col
   end

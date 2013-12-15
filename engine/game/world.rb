@@ -1,3 +1,4 @@
+require "set"
 require "engine/utils/spatial_map"
 
 class World
@@ -10,7 +11,7 @@ class World
 
   def initialize
     @spatial_map = SpatialMap.new TILE_SIZE
-    @entities = Array.new
+    @entities = Set.new
     self.gravity_x = 0
     self.gravity_y = 1
     self.air_friction = 0.995
@@ -23,7 +24,7 @@ class World
         to_remove.add entity
       else
         entity.update delta, self
-        if entity.collisions && entity.has_moved
+        if entity.collides && entity.has_moved
           self.spatial_map.update entity
         end
       end

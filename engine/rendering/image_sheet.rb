@@ -13,14 +13,14 @@ class ImageSheet < AABB
 	end
 	def frames_per_second= val
 		@frames_per_second = val
-		self.frame_duration = 1000 / val
+		@frame_duration = 1000 / val
 	end
 	def frame_duration
 		@frame_duration
 	end
 	def frame_duration= val
 		@frame_duration = val
-		self.frames_per_second = 1000 / val
+		@frames_per_second = 1000 / val
 	end
 	attr_accessor :frameTime
 	attr_accessor :is_repeating

@@ -8,9 +8,9 @@ class Entity < Collisionnable
     @health
   end
   def health= value
-    @health = value.keys[0]
-    if (@health < 0)
-      self.die value.values[0]
+    @health = value
+    if (@health <= 0)
+      self.die
     end
   end
 
@@ -23,10 +23,10 @@ class Entity < Collisionnable
 
   def initialize pos_x, pos_y, width, height, options = Hash.new
     super pos_x, pos_y, width, height, options
-    self.image_sheet = options[:image_sheet].nil? ? nil : options[:image_sheet]
-    self.image_sheet_offset_x = options[:image_sheet_offset_x].nil? ? nil : options[:image_sheet_offset_x]
-    self.image_sheet_offset_y = options[:image_sheet_offset_y].nil? ? nil : options[:image_sheet_offset_y]
-    self.health = options[:health].nil? ? [0 => options[:world]] : [options[:health] => options[:world]]
+    self.image_sheet = options[:image_sheet]
+    self.image_sheet_offset_x = options[:image_sheet_offset_x].nil? ? 0 : options[:image_sheet_offset_x]
+    self.image_sheet_offset_y = options[:image_sheet_offset_y].nil? ? 0 : options[:image_sheet_offset_y]
+    self.health = options[:health].nil? ? 0 : options[:health]
     @should_be_removed = false
   end
 
@@ -39,7 +39,7 @@ class Entity < Collisionnable
   end
 
   def hit_for damage
-  	self.health -= damage
+    self.health -= damage
   end
 
   def update delta, world

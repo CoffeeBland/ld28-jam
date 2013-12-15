@@ -3,6 +3,7 @@ require "engine/utils/text"
 
 class Character < Entity
   attr_reader :current_action
+
   def say speech
     @speech = speech
   end
