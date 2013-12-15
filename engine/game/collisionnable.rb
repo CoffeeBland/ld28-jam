@@ -102,8 +102,10 @@ class Collisionnable < AABB
   end
   def in_collision_entity? entity, position_x, position_y
     entity.can_be_collided &&
-    x_aligned?(entity, position_x, position_y) &&
-    y_aligned?(entity, position_x, position_y)
+    position_x - (entity.pos_x + entity.width) < 0 &&
+    (position_x + self.width) - entity.pos_x > 0 &&
+    position_y - (entity.pos_y + entity.height) < 0 &&
+    (position_y + self.height) - entity.pos_y > 0
   end
   def x_aligned? entity, position_x, position_y
     position_x - (entity.pos_x + entity.width) < DISTANCE_TOLERANCE &&
@@ -271,9 +273,6 @@ class Collisionnable < AABB
     if !self.collides || !in_collision_world?(world, position_x, position_y)
       self.pos_x = position_x
       self.pos_y = position_y
-    else
-      self.pos_x = col.distance_x == self.velocity_x ? position_x : self.pos_x
-      self.pos_y = col.distance_y == self.velocity_y ? position_y : self.pos_y
     end
 
     self.resolve_collision col, world

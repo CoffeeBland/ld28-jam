@@ -47,16 +47,27 @@ module LD28
         super
 
         self.input_down Gosu::KbLeft, Proc.new {
-          @player.velocity_x -= 0.5
+          if @player.last_collision.in_collision_bottom
+            @player.image_sheet.tile_y = 2
+            @player.velocity_x -= 1
+          else
+            @player.image_sheet.tile_y = 3
+            @player.velocity_x -= 0.1
+          end
         }
         self.input_down Gosu::KbRight, Proc.new {
-          @player.velocity_x += 0.5
-        }
-        self.input_down Gosu::KbRight, Proc.new {
-          @player.velocity_x += 1
+          if @player.last_collision.in_collision_bottom
+            @player.image_sheet.tile_y = 6
+            @player.velocity_x += 1
+          else
+            @player.image_sheet.tile_y = 7
+            @player.velocity_x += 0.1
+          end
         }
         self.input_down Gosu::KbUp, Proc.new {
-          @player.velocity_y -= 1
+          if @player.last_collision.in_collision_bottom
+            @player.velocity_y -= 4
+          end
         }
       end
 
