@@ -31,7 +31,7 @@ class Character < Entity
     super camera
 
     if self.speech != nil
-      Text.draw_bubble ["0"], self.pos_x + self.width / 2, self.pos_y, camera
+      Text.draw_bubble @speech, self.pos_x + self.width / 2, self.pos_y, camera
     end
   end
 end

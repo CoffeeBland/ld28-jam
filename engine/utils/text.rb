@@ -45,12 +45,12 @@ class Text
         @@font_size, @@font_size, :z_index => 0.9999
         )
     end
-    start_x = pos_x - width / 2 - @@font_size * 0.5
+    start_x = pos_x - width / 2 - @@font_size #* 0.5
     start_y = pos_y - height - @@font_size * 2
     max_x = start_x + width + @@font_size
     max_y = start_y + height + @@font_size
 
-    self.draw lines, start_x + @@font_size + line_dif / 2, start_y + @@font_size
+    self.draw lines, start_x - camera.pos_x + @@font_size + line_dif / 2, start_y - camera.pos_y + @@font_size
 
     (start_x..max_x).step @@font_size do |x|
       @@bubble_texture.tile_x = (x <= start_x) ? 0 : (x < max_x) ? 1 : 2

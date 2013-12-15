@@ -63,6 +63,9 @@ class State
   def draw_rect x, y, width, height, z = 0
     @game.draw_rect x, y, width, height, z
   end
+  def draw_rect_outline x, y, width, height, z = 0
+    @game.draw_rect_outline x, y, width, height, z
+  end
 
   # Transitions
   def transition_draw color, percent

@@ -20,5 +20,12 @@ module Gosu
         z)
     end
 
+    def draw_rect_outline x, y, width, height, z = 0
+      draw_line x, y, @color, x + width, y, @color, z # top
+      draw_line x, y + height, @color, x + width, y + height, @color, z # bottom
+      draw_line x, y, @color, x, y + height, @color, z # left
+      draw_line x + width, y, @color, x + width, y + height, @color, z # right
+    end
+
   end
 end
