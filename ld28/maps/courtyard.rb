@@ -13,10 +13,13 @@ module LD28
       def update state, tick
         if (tick / 1500) % 3 == 0
           state.player.say ['I am the HOOONLY hero!']
+          @joj.say ['fack']
         elsif (tick / 1500) % 3 == 1
           state.player.say ['Me saaave whorld!', 'Mhe noo sthupid!']
+          @joj.say ['fock']
         else
           state.player.say nil
+          @joj.say ['fick']
         end
       end
 
@@ -52,8 +55,8 @@ module LD28
           :image_sheet_offset_x => -3,
           :image_sheet_offset_y => -16}
         state.world.add state.player
-        state.world.add Character.new 30, 130, 24, 48, :image_sheet => get_hero_sheet.call, :health => 100
-
+        @joj = Character.new 30, 130, 24, 48, :image_sheet => get_hero_sheet.call, :health => 100
+        state.world.add @joj
         # Floor
         state.world.add CollisionnableBlock.new -5000, 350, 10008, 20
         # Gate Left

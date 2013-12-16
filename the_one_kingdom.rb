@@ -9,7 +9,7 @@ end
 
 class Game < Gosu::Window
   # Not constants so when we find a way for it to be dynamic we can change them
-  @@width = 480
+  @@width = 640
   @@height = 480
   def self.width; @@width; end
   def self.height; @@height; end

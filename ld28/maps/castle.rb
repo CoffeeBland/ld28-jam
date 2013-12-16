@@ -12,10 +12,19 @@ module LD28
       end
 
       def update state, tick
-        if (tick / 3000) % 2 == 1
-          @king.say ['I am the ONLY King!']
-        else
-          @king.say nil
+        if (tick) % 1000 < 16
+          case rand(5)
+          when 0
+            @king.say ['I am the ONLY King!'], 1000
+          when 1
+            @king.say ['You ought to save the kingdom!'], 1000
+          when 2
+            @king.say ['You silly, silly, silly person...', 'Only I have power'], 1000
+          when 3
+            @king.say ['Begone you fool!'], 1000
+          when 4
+            @king.say ['All hail in front of my superior uniqueness!'], 1000
+          end
         end
       end
 
@@ -56,14 +65,16 @@ module LD28
             :image_sheet => get_hero_sheet.call('hero'),
             :health => 100,
             :image_sheet_offset_x => -3,
-            :image_sheet_offset_y => -12
+            :image_sheet_offset_y => -12,
+            :name => "Hero"
           }
         state.world.add state.player
         @king = Character.new (-299 + 1*24), (350 - 5*24), 18, 42, {
             :image_sheet => get_hero_sheet.call('roi'),
             :health => 100,
             :image_sheet_offset_x => -3,
-            :image_sheet_offset_y => -6
+            :image_sheet_offset_y => -6,
+            :name => "King"
           }
         @king.facing = :right
         state.world.add @king

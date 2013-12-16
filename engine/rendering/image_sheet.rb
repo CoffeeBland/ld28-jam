@@ -114,12 +114,11 @@ class ImageSheet < AABB
 		end
 	end
 
-	def draw camera
-
+	def draw camera, z_decal = 0
 		self.tiles[self.tile_x][self.tile_y].draw(
 			(self.pos_x - camera.pos_x).round,
 			(self.pos_y - camera.pos_y).round,
-			self.z_index, 1, 1, self.color
+			self.z_index + z_decal, 1, 1, self.color
 			)
 	end
 end

@@ -9,6 +9,7 @@ class Character < Entity
   @@damaged_duration = 800
   @@red_duration = 700
   @@damaged_flash_duration = 100
+  @@speech_bubble_distance = 20
 
   attr_reader :current_action
   attr_accessor :update_anim
@@ -24,6 +25,9 @@ class Character < Entity
     self.landed = false
     self.damaged_duration = 0
     @attributes = Hash.new
+    @speech_stack = Array.new
+
+    self[:name] = options[:name].nil? ? "Sir Unnamed" : options[:name]
   end
 
   def [] key
@@ -37,13 +41,18 @@ class Character < Entity
     super damage, world
     self.damaged_duration = @@damaged_duration
     self.image_sheet.color = 0xffff0000
+    self.say ["Ouch!"], 500
   end
 
-  def say speech
-    @speech = speech
+  def say speech, duration = 1000
+    @speech_stack.push [speech, duration]
   end
   def speech
-    @speech
+    if @speech_stack.length > 0
+      @speech_stack[-1][0]
+    else
+      nil
+    end
   end
 
   def do action
@@ -53,22 +62,29 @@ class Character < Entity
   def update delta, world
     self.landed = false
 
+    #decay damaged duration
     if self.damaged_duration > 0
       self.damaged_duration -= delta
       self.image_sheet.color = 0xffffffff if self.damaged_duration <= @@red_duration
     end
 
+    #determine action
     if self.current_action != nil
       self.current_action.update delta, world, self
       @current_action = nil if self.current_action.completed?
     end
 
+    #determine if landing
     touched_ground = self.last_collision.in_collision_bottom
     super delta, world
     if !touched_ground && self.last_collision.in_collision_bottom
       self.landed = true
     end
 
+    #update speech
+    self.update_speech delta if @speech_stack.length > 0
+
+    #update anim
     if self.update_anim != nil
       self.update_anim.call self
     else #if there is no sheet, assume that it is citizen
@@ -94,11 +110,21 @@ class Character < Entity
     end
   end
 
+  def update_speech delta
+    @speech_stack[-1][1] -= delta
+    tmp = @speech_stack[-1][1]
+    if tmp < 0
+      @speech_stack.pop
+      self.update_speech -tmp if @speech_stack.length > 0
+    end
+  end
+
   def draw camera
     super camera if self.damaged_duration <= 0 || self.damaged_duration >= @@red_duration || (self.damaged_duration / @@damaged_flash_duration).round % 2 == 0
 
+    Text.draw_name self, camera, self.z_index_decal
     if self.speech != nil
-      Text.draw_bubble @speech, self.pos_x + self.width / 2, self.pos_y, camera
+      Text.draw_bubble self.speech, self.pos_x + self.width / 2, self.pos_y - @@speech_bubble_distance, camera, self.z_index_decal
     end
   end
 end

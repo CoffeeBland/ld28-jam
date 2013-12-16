@@ -22,14 +22,21 @@ class Text
     @@lines[text]
   end
 
-  def self.draw lines, x, y, c = 0xff000000, z = 999
+  def self.draw lines, x, y, z_decal = 0, z = 999, c = 0xff000000
     tmp = 0
     lines.each do |line|
-      Text[line].draw x, y + tmp, z, 1, 1, c
+      Text[line].draw x, y + tmp, z + z_decal, 1, 1, c
       tmp += (@@font_size).round
     end
   end
-  def self.draw_bubble lines, pos_x, pos_y, camera
+  def self.draw_name entity, camera, z_decal = 0, z = 998, c = 0xff000000
+    line = Text[entity[:name]]
+    x = entity.pos_x + (entity.width / 2 - line.width / 2) - camera.pos_x
+    y = entity.pos_y - (entity.image_sheet.height - entity.height) - @@font_size * 1.2 - camera.pos_y
+    line.draw x, y, z + z_decal, 1, 1, c
+  end
+  def self.draw_bubble lines, pos_x, pos_y, camera, z_decal = 0
+    puts z_decal
     width = 0
     lines.each do |line|
       width = [Text[line].width, width].max
@@ -42,7 +49,7 @@ class Text
     if @@bubble_texture == nil
       @@bubble_texture = ImageSheet.new(
         File.join('res', 'images', 'speech_bubble.png'),
-        @@font_size, @@font_size, :z_index => 998
+        @@font_size, @@font_size, :z_index => 999
         )
     end
     start_x = pos_x - width / 2 - @@font_size #* 0.5
@@ -50,21 +57,25 @@ class Text
     max_x = start_x + width + @@font_size
     max_y = start_y + height + @@font_size
 
-    self.draw lines, start_x - camera.pos_x + @@font_size + line_dif / 2, start_y - camera.pos_y + @@font_size
-
     (start_x..max_x).step @@font_size do |x|
       @@bubble_texture.tile_x = (x <= start_x) ? 0 : (x < max_x) ? 1 : 2
       @@bubble_texture.pos_x = x
       (start_y..max_y).step @@font_size do |y|
         @@bubble_texture.tile_y = (y <= start_y) ? 0 : (y < max_y) ? 1 : 2
         @@bubble_texture.pos_y = y
-        @@bubble_texture.draw camera
+        @@bubble_texture.draw camera, z_decal
       end
     end
     @@bubble_texture.tile_x = 1
     @@bubble_texture.tile_y = 3
     @@bubble_texture.pos_x = (start_x + max_x) / 2
     @@bubble_texture.tile_y = 3
-    @@bubble_texture.draw camera
+    @@bubble_texture.draw camera, z_decal
+
+    self.draw(lines,
+        start_x - camera.pos_x + @@font_size + line_dif / 2,
+        start_y - camera.pos_y + @@font_size,
+        z_decal
+      )
   end
 end
