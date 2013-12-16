@@ -36,7 +36,6 @@ class Text
     line.draw x, y, z + z_decal, 1, 1, c
   end
   def self.draw_bubble lines, pos_x, pos_y, camera, z_decal = 0
-    puts z_decal
     width = 0
     lines.each do |line|
       width = [Text[line].width, width].max

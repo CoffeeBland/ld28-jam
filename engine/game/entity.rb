@@ -33,7 +33,6 @@ class Entity < Collisionnable
     @should_be_removed = false
     @@entity_count = (@@entity_count + 1) % @@entity_count_max
     @entity_number = @@entity_count
-    puts self.z_index_decal
   end
 
   def die world
