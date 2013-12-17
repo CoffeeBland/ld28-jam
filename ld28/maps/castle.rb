@@ -1,8 +1,8 @@
 require "engine/game/map"
 require "engine/game/entity"
 require "engine/game/character"
-require "engine/game/collisionnable"
-require "engine/game/collisionnable_block"
+require "engine/physics/collisionnable"
+require "engine/physics/collisionnable_block"
 
 module LD28
   module Maps
@@ -83,10 +83,10 @@ module LD28
         state.world.add CollisionnableBlock.new -276, 302, 24, 24
         state.world.add CollisionnableBlock.new -282, 270, 6, 56
         # Throne pedestal
-        state.world.add CollisionnableBlock.new -300, 326, 144, 6
-        state.world.add CollisionnableBlock.new -300, 332, 150, 6
-        state.world.add CollisionnableBlock.new -300, 338, 156, 6
-        state.world.add CollisionnableBlock.new -300, 344, 162, 6
+        state.world.add CollisionnableBlock.new -300, 326, 144, 24
+        state.world.add BlockAngleTL_BR.new -156, 325, 12, 25
+        state.world.add BlockAngleTL_BR.new -106, 326, 24, 24
+        state.world.add BlockAngleTL_BR.new -56, 326, 32, 24
         # Floor
         state.world.add CollisionnableBlock.new -300, 350, 600, 48
         # Left wall

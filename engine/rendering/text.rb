@@ -1,4 +1,5 @@
 require "engine/rendering/image_sheet"
+require "engine/utils/z"
 
 class Text
   @@font = nil
@@ -6,6 +7,8 @@ class Text
   @@lines = Hash.new
   @@bubble_texture = nil
   @@font_size = 20
+  @@z_speech = Z[:ui_speech_bubbles]
+  @@z_name = Z[:ui_nameplates]
 
   def self.window= obj
     @@window = obj
@@ -22,14 +25,14 @@ class Text
     @@lines[text]
   end
 
-  def self.draw lines, x, y, z_decal = 0, z = 999, c = 0xff000000
+  def self.draw lines, x, y, z_decal = 0, z = @@z_speech, c = 0xff000000
     tmp = 0
     lines.each do |line|
       Text[line].draw x, y + tmp, z + z_decal, 1, 1, c
       tmp += (@@font_size).round
     end
   end
-  def self.draw_name entity, camera, z_decal = 0, z = 998, c = 0xff000000
+  def self.draw_name entity, camera, z_decal = 0, z = @@z_name, c = 0xff000000
     line = Text[entity[:name]]
     x = entity.pos_x + (entity.width / 2 - line.width / 2) - camera.pos_x
     y = entity.pos_y - (entity.image_sheet.height - entity.height) - @@font_size * 1.2 - camera.pos_y
@@ -48,7 +51,7 @@ class Text
     if @@bubble_texture == nil
       @@bubble_texture = ImageSheet.new(
         File.join('res', 'images', 'speech_bubble.png'),
-        @@font_size, @@font_size, :z_index => 999
+        @@font_size, @@font_size, :z_index => @@z_speech
         )
     end
     start_x = pos_x - width / 2 - @@font_size #* 0.5

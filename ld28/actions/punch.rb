@@ -17,14 +17,14 @@ class Punch < Action
       ),
       Cue.new(300, Proc.new { |world, source|
           source.image_sheet.tile_x = 1
-          source.velocity_y -= 0.5
-          source.velocity_x -= 1 * (@multiplier - 0.5)
+          source.velocity_y -= 0.75
+          source.velocity_x -= 2 * (@multiplier - 0.5)
         }
       ),
       Cue.new(200, Proc.new { |world, source|
           source.image_sheet.tile_x = 2
-          source.velocity_y -= 0.5
-          source.velocity_x += 3 * (@multiplier - 0.5)
+          source.velocity_y -= 0.75
+          source.velocity_x += 4 * (@multiplier - 0.5)
         }
       ),
       Cue.new(100, Proc.new { |world, source|

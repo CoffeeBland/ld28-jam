@@ -7,6 +7,8 @@ require "gosu"
   require file
 end
 
+include Engine::Rendering
+
 class Game < Gosu::Window
   # Not constants so when we find a way for it to be dynamic we can change them
   @@width = 640

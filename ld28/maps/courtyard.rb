@@ -1,7 +1,7 @@
 require "engine/game/map"
 require "engine/game/entity"
 require "engine/game/character"
-require "engine/game/collisionnable_block"
+require "engine/physics/collisionnable_block"
 
 module LD28
   module Maps

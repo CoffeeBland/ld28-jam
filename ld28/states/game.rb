@@ -1,7 +1,7 @@
 require "engine/state"
 require "engine/game/world"
 require "engine/game/entity"
-require "engine/utils/images"
+require "engine/rendering/images"
 require "pp"
 require "ld28/sfx/smoke"
 require "ld28/actions/punch"
@@ -38,11 +38,11 @@ module LD28
 
         unless @player.nil?
           Images[:health_bar_container].draw 16, 16, 1000
-          draw_rect 16 + 15, 16 + 8, @player.health, 16, 1001, 0xFFBC0000
+          draw_rect 16 + 15, 16 + 8, @player.health, 16, 1001, 0xFFFF0000
         end
 
         # BEHOLD! Debugging down here
-        #set_color 0xEE00EEFF; @world.entities.each do |e| draw_rect_outline e.pos_x - @camera.pos_x, e.pos_y - @camera.pos_y, e.width, e.height, 1000; end
+        set_color 0xEE00EEFF; @world.entities.each do |e| draw_rect_outline e.pos_x - @camera.pos_x, e.pos_y - @camera.pos_y, e.width, e.height, 1000; end
       end
 
       def init
@@ -61,7 +61,7 @@ module LD28
             multiplier *= 0.25
           end
           if @player.last_collision.in_collision_bottom
-            @player.velocity_x -= 1 * multiplier
+            @player.velocity_x -= 1.1 * multiplier
           else
             @player.velocity_x -= 0.1 * multiplier
           end
@@ -75,7 +75,7 @@ module LD28
             multiplier *= 0.25
           end
           if @player.last_collision.in_collision_bottom
-            @player.velocity_x += 1 * multiplier
+            @player.velocity_x += 1.1 * multiplier
           else
             @player.velocity_x += 0.1 * multiplier
           end
@@ -83,7 +83,7 @@ module LD28
         self.input_press Gosu::KbUp, Proc.new {
           @player.facing_y = :up
           if @player.last_collision.in_collision_bottom && @player.current_action.nil?
-            @player.velocity_y -= 5
+            @player.velocity_y -= 6
             @world.add Smoke.new(@player.pos_x + @player.width / 2, @player.pos_y + @player.height)
           end
           @world.check_for_door_with @player
