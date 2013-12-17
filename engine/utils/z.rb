@@ -21,7 +21,9 @@ module Engine
       self.put_range :entities, 10
       self.put_range :ui_nameplates, 1
       self.put_val :ui_speech_bubbles
-      self.put_range :ui, 10
+      self.put_val :ui_health_bar
+      self.put_val :ui_health
+      self.put_val :debugging
 
       def self.[] key
         val = @@ranges[key]

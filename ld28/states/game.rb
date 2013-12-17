@@ -6,10 +6,12 @@ require "pp"
 require "ld28/sfx/smoke"
 require "ld28/actions/punch"
 require "ld28/maps/courtyard"
+require "engine/utils/settings"
 
 module LD28
   module States
     class Game < State
+
       attr_reader :camera
       attr_reader :game
       attr_reader :world
@@ -30,6 +32,7 @@ module LD28
         @current_map.update self, @now_in_for unless @current_map.nil?
       end
 
+
       def draw
         transition 0x000000FF, 0, 1000, @now_in_for
 
@@ -37,12 +40,18 @@ module LD28
         @current_map.draw self, @game unless @current_map.nil?
 
         unless @player.nil?
-          Images[:health_bar_container].draw 16, 16, 1000
-          draw_rect 16 + 15, 16 + 8, @player.health, 16, 1001, 0xFFFF0000
+          Images[:health_bar_container].draw 16, 16, Z[:ui_health_bar]
+          draw_rect 16 + 15, 16 + 8, @player.health, 16, Z[:ui_health], 0xFFFF0000
         end
 
         # BEHOLD! Debugging down here
-        set_color 0xEE00EEFF; @world.entities.each do |e| draw_rect_outline e.pos_x - @camera.pos_x, e.pos_y - @camera.pos_y, e.width, e.height, 1000; end
+        if Engine::Utils::Settings[:debugging]
+          set_color 0xEE00EEFF; @world.entities.each do |e| draw_rect_outline e.pos_x - @camera.pos_x, e.pos_y - @camera.pos_y, e.width, e.height, Z[:debugging]; end
+          @current_time = Gosu::milliseconds
+          @fps = ((@fps.nil? ? 60 : @fps) * 0.9) + (1000.0 / (@current_time - (@last_time.nil? ? 0 : @last_time)) * 0.1)
+          Text.draw [@fps.round.to_s], 4, 4, 0, Z[:debugging], 0xFFFF00FF
+          @last_time = Gosu::milliseconds
+        end
       end
 
       def init

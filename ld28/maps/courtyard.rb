@@ -1,6 +1,6 @@
 require "engine/game/map"
 require "engine/game/entity"
-require "engine/game/character"
+require "engine/game/actor"
 require "engine/physics/collisionnable_block"
 
 module LD28
@@ -55,7 +55,7 @@ module LD28
           :image_sheet_offset_x => -3,
           :image_sheet_offset_y => -16}
         state.world.add state.player
-        @joj = Character.new 30, 130, 24, 48, :image_sheet => get_hero_sheet.call, :health => 100
+        @joj = Actor.new 30, 130, 24, 48, :image_sheet => get_hero_sheet.call, :health => 100
         state.world.add @joj
         # Floor
         state.world.add CollisionnableBlock.new -5000, 350, 10008, 20

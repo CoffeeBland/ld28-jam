@@ -1,7 +1,7 @@
 require "engine/game/particle"
 require "engine/rendering/image_sheet"
 
-class Smoke < Particle
+class Smoke < Engine::Game::Particle
   @@width = 12
   @@height = 12
   @@gravitates = false

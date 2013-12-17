@@ -8,6 +8,7 @@ module Engine
 			attr_accessor :tiles
 			attr_accessor :z_index
 			attr_accessor :color
+			attr_accessor :reverse
 
 			# Animation properties
 			def frames_per_second
@@ -95,6 +96,7 @@ module Engine
 				@height = tileHeight
 				@color = 0xffffffff
 				@z_index = options[:z_index].nil? ? 99 : options[:z_index]
+				@reverse = 1
 
 				self.is_repeating = options[:is_repeating].nil? ? true : options[:is_repeating]
 				if options[:frames_per_second] != nil
@@ -118,9 +120,9 @@ module Engine
 
 			def draw camera, z_decal = 0
 				self.tiles[self.tile_x][self.tile_y].draw(
-					(self.pos_x - camera.pos_x).round,
+					(self.pos_x - camera.pos_x + (@width * -(self.reverse - 1) / 2)).round,
 					(self.pos_y - camera.pos_y).round,
-					self.z_index + z_decal, 1, 1, self.color
+					self.z_index + z_decal, self.reverse, 1, self.color
 					)
 			end
 		end

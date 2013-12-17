@@ -1,9 +1,13 @@
-require "engine/game/character"
+require "engine/game/actor"
+require "LD28/weapons"
 
 module LD28
   module Characters
-    class Hero < Character
-
+    class Hero < Actor
+      def initialize pos_x, pos_y, width, height, options = Hash.new
+        super pos_x, pos_y, width, height, options
+        self.weapon = IronSword.new
+      end
     end
   end
 end

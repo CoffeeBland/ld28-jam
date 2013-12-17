@@ -7,19 +7,34 @@ require "gosu"
   require file
 end
 
+ARGV.each do|a|
+  p = a.split "="
+  v = p.length >= 2 ? p[1] : true
+  case v
+    when "true"
+      v = true
+    when "false"
+      v = false
+    else
+      v = v.to_i
+  end
+  Settings[p[0].to_sym] = v
+end
+
 include Engine::Rendering
 
 class Game < Gosu::Window
   # Not constants so when we find a way for it to be dynamic we can change them
-  @@width = 640
-  @@height = 480
+  @@width = Settings[:width].is_a?(Numeric) ? Settings[:width] : 640
+  @@height = Settings[:height].is_a?(Numeric) ? Settings[:height] : 480
   def self.width; @@width; end
   def self.height; @@height; end
 
   # All the setup!
   def initialize
+    # Deactivate anti-aliasing
     Gosu::enable_undocumented_retrofication
-    super @@width, @@height, false
+    super @@width, @@height, (Settings[:fullscreen] != nil && Settings[:fullscreen])
     self.caption = 'Ludum Dare 28 : The One Kingdom'
 
     @time = Gosu::milliseconds

@@ -86,20 +86,14 @@ module Engine
               cornerX = self.pos_x - entity.pos_x
               cornerY = self.pos_y + self.height - entity.pos_y
               if  cornerX < 0 ||
-                  cornerY > entity.height ||
-                  (cornerX < entity.width &&
-                  cornerY > 0 &&
-                  entity.height.to_f / entity.width * cornerX - cornerY < 0)
+                  cornerY > entity.height
                 return true
               end
             when :diagonal_tr_bl
               cornerX = self.pos_x + self.width - entity.pos_x
               cornerY = self.pos_y + self.height - entity.pos_y
               if  cornerX > entity.width ||
-                  cornerY > entity.height ||
-                  (cornerX > 0 &&
-                  cornerY > 0 &&
-                  -entity.height.to_f / entity.width * cornerX + entity.height - cornerY < 0)
+                  cornerY > entity.height
                 return true
               end
             end
@@ -220,7 +214,7 @@ module Engine
         tmp = entity.pos_y + entity.height -
           (obj_ratio *
           (self.pos_x + self.width + col.distance_x - entity.pos_x)) -
-          self.pos_y + self.height - DISTANCE_TOLERANCE
+          (self.pos_y + self.height) - DISTANCE_TOLERANCE
         if tmp - col.distance_y < DISTANCE_TOLERANCE
           col.distance_y = tmp
           col.collision_y = entity

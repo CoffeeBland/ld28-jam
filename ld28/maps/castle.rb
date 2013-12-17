@@ -1,6 +1,6 @@
 require "engine/game/map"
 require "engine/game/entity"
-require "engine/game/character"
+require "engine/game/actor"
 require "engine/physics/collisionnable"
 require "engine/physics/collisionnable_block"
 
@@ -69,12 +69,13 @@ module LD28
             :name => "Hero"
           }
         state.world.add state.player
-        @king = Character.new (-299 + 1*24), (350 - 5*24), 18, 42, {
+        @king = Actor.new (-299 + 1*24), (350 - 5*24), 18, 42, {
             :image_sheet => get_hero_sheet.call('roi'),
             :health => 100,
             :image_sheet_offset_x => -3,
             :image_sheet_offset_y => -6,
-            :name => "King"
+            :name => "King",
+            :scared? => true
           }
         @king.facing = :right
         state.world.add @king
@@ -85,7 +86,7 @@ module LD28
         # Throne pedestal
         state.world.add CollisionnableBlock.new -300, 326, 144, 24
         state.world.add BlockAngleTL_BR.new -156, 325, 12, 25
-        state.world.add BlockAngleTL_BR.new -106, 326, 24, 24
+        state.world.add BlockAngleTR_BL.new -106, 326, 24, 24
         state.world.add BlockAngleTL_BR.new -56, 326, 32, 24
         # Floor
         state.world.add CollisionnableBlock.new -300, 350, 600, 48

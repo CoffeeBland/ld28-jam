@@ -1,7 +1,7 @@
 require "engine/game/particle"
 require "engine/rendering/image_sheet"
 
-class Hit < Particle
+class Hit < Engine::Game::Particle
   @@width = 24
   @@height = 24
   @@gravitates = false
