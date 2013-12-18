@@ -1,4 +1,4 @@
-require "engine/game/weapon"
+require 'engine/game/weapon'
 
 module LD28
   class Fist < Weapon

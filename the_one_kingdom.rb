@@ -1,19 +1,19 @@
 ROOT_DIR = File.dirname(File.absolute_path(__FILE__))
-RD = File.dirname(File.absolute_path(__FILE__)) + '/res'
+#RD = File.dirname(File.absolute_path(__FILE__)) + '/res'
 $: << File.expand_path(File.dirname(__FILE__))
 
-require "gosu"
-(Dir.glob(ROOT_DIR + "/engine/**/*.rb") + Dir.glob(ROOT_DIR + "/ld28/**/*.rb")).each do |file|
+require 'gosu'
+(Dir.glob(ROOT_DIR + '/engine/**/*.rb') + Dir.glob(ROOT_DIR + '/ld28/**/*.rb')).each do |file|
   require file
 end
 
 ARGV.each do|a|
-  p = a.split "="
+  p = a.split '='
   v = p.length >= 2 ? p[1] : true
   case v
-    when "true"
+    when 'true'
       v = true
-    when "false"
+    when 'false'
       v = false
     else
       v = v.to_i
@@ -24,30 +24,28 @@ end
 include Engine::Rendering
 
 class Game < Gosu::Window
-  # Not constants so when we find a way for it to be dynamic we can change them
-  @@width = Settings[:width].is_a?(Numeric) ? Settings[:width] : 640
-  @@height = Settings[:height].is_a?(Numeric) ? Settings[:height] : 480
-  def self.width; @@width; end
-  def self.height; @@height; end
-
   # All the setup!
   def initialize
+    # Ideally the width and the height would be dynamic
+    @width = Settings[:width].is_a?(Numeric) ? Settings[:width] : 640
+    @height = Settings[:height].is_a?(Numeric) ? Settings[:height] : 480
+
     # Deactivate anti-aliasing
     Gosu::enable_undocumented_retrofication
-    super @@width, @@height, (Settings[:fullscreen] != nil && Settings[:fullscreen])
+    super(@width, @height, (Settings[:fullscreen] != nil && Settings[:fullscreen]))
     self.caption = 'Ludum Dare 28 : The One Kingdom'
 
     @time = Gosu::milliseconds
     @pressed_inputs = Hash.new
 
     Sounds.window = self
-    init_sounds()
+    init_sounds
 
     Images.window = self
-    init_images()
+    init_images
 
     Text.window = self
-    init_font()
+    init_font
 
     @states = {
       :init => LD28::States::Logo.new(self),
@@ -75,7 +73,7 @@ class Game < Gosu::Window
     Text.font = File.join('res', 'font.ttf')
   end
 
-  def switch_to state_name
+  def switch_to(state_name)
     unless @active_state.nil?
       @active_state.leave
     end
@@ -99,12 +97,12 @@ class Game < Gosu::Window
     @active_state.draw
   end
 
-  def button_down id
+  def button_down(id)
     @active_state.press id
     @pressed_inputs[id] = true
   end
 
-  def button_up id
+  def button_up(id)
     @active_state.release id
     @pressed_inputs.delete id
   end
