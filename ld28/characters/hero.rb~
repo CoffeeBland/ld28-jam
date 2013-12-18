@@ -1,5 +1,5 @@
 require "engine/game/actor"
-require "ld28/weapons"
+require "LD28/weapons"
 
 module LD28
   module Characters
