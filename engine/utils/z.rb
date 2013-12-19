@@ -24,6 +24,7 @@ module Engine
       self.put_val :ui_health_bar
       self.put_val :ui_health
       self.put_val :debugging
+      self.put_val :fade_in_out
 
       def self.[] key
         val = @@ranges[key]

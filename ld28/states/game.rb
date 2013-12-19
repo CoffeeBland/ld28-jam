@@ -1,12 +1,13 @@
-require "engine/state"
-require "engine/game/world"
-require "engine/game/entity"
-require "engine/rendering/images"
-require "pp"
-require "ld28/sfx/smoke"
-require "ld28/actions/punch"
-require "ld28/maps/courtyard"
-require "engine/utils/settings"
+require 'engine/state'
+require 'engine/game/world'
+require 'engine/game/entity'
+require 'engine/rendering/images'
+require 'pp'
+require 'ld28/sfx/smoke'
+require 'ld28/actions/punch'
+require 'ld28/actions/interact'
+require 'ld28/maps/courtyard'
+require 'engine/utils/settings'
 
 module LD28
   module States
@@ -26,19 +27,22 @@ module LD28
         end
 
         super delta
-        @world.update delta
-        @camera.center_on @player
 
+        @world.update delta
         @current_map.update self, @now_in_for unless @current_map.nil?
+
+        @camera.center_on @player
       end
 
 
       def draw
-        transition 0x000000FF, 0, 1000, @now_in_for
+        super
 
+        # Drawing the world & the map
         @world.draw @camera
         @current_map.draw self, @game unless @current_map.nil?
 
+        # UI
         unless @player.nil?
           Images[:health_bar_container].draw 16, 16, Z[:ui_health_bar]
           draw_rect 16 + 15, 16 + 8, @player.health, 16, Z[:ui_health], 0xFFFF0000
@@ -56,74 +60,69 @@ module LD28
 
       def init
         super
-        @world = nil
-        @camera = nil
+
+        @world = World.new
+        @camera = Camera.new 0, 0, @game.width, @game.height
+        @camera.decal_y = -150
         @player = nil
         @maps = Hash.new
 
+        # Initialize all teh inputs!
         self.input_down Gosu::KbLeft, Proc.new {
-          @player.facing_y = :none
-          multiplier = 1
-          if @player.current_action.nil?
-            @player.facing = :left
-          else
-            multiplier *= 0.25
-          end
-          if @player.last_collision.in_collision_bottom
-            @player.velocity_x -= 1.1 * multiplier
-          else
-            @player.velocity_x -= 0.1 * multiplier
-          end
-        }
+            @player.facing_y = :none
+            @player.facing = :left if @player.current_action.nil?
+            if @player.last_collision.in_collision_bottom
+              @player.velocity_x -= 1.1
+            else
+              @player.velocity_x -= 0.1
+            end
+          }
         self.input_down Gosu::KbRight, Proc.new {
-          @player.facing_y = :none
-          multiplier = 1
-          if @player.current_action.nil?
-            @player.facing = :right
-          else
-            multiplier *= 0.25
-          end
-          if @player.last_collision.in_collision_bottom
-            @player.velocity_x += 1.1 * multiplier
-          else
-            @player.velocity_x += 0.1 * multiplier
-          end
-        }
+            @player.facing_y = :none
+            @player.facing = :right if @player.current_action.nil?
+            if @player.last_collision.in_collision_bottom
+              @player.velocity_x += 1.1
+            else
+              @player.velocity_x += 0.1
+            end
+          }
         self.input_press Gosu::KbUp, Proc.new {
-          @player.facing_y = :up
-          if @player.last_collision.in_collision_bottom && @player.current_action.nil?
-            @player.velocity_y -= 6
-            @world.add Smoke.new(@player.pos_x + @player.width / 2, @player.pos_y + @player.height)
-          end
-          @world.check_for_door_with @player
-        }
+            @player.facing_y = :up
+            if @player.last_collision.in_collision_bottom && @player.current_action.nil?
+              @player.velocity_y -= 6
+              @world.add Smoke.new(@player.pos_x + @player.width / 2, @player.pos_y + @player.height)
+            end
+            @world.check_for_door_with @player
+          }
         self.input_press Gosu::KbZ, Proc.new {
-          if @player.current_action.nil?
-            @player.facing = :left
-            @player.do Punch.new
-          end
-        }
+            if @player.current_action.nil?
+              @player.facing = :left
+              @player.do LD28::Actions::Punch.new
+            end
+          }
         self.input_press Gosu::KbX, Proc.new {
-          if @player.current_action.nil?
-            @player.facing = :right
-            @player.do Punch.new
-          end
-        }
+            if @player.current_action.nil?
+              @player.facing = :right
+              @player.do LD28::Actions::Punch.new
+            end
+          }
+        self.input_press Gosu::KbSpace, Proc.new {
+            if @player.current_action.nil?
+              @player.do LD28::Actions::Interact.new
+            end
+          }
       end
 
       def enter
         super
-        @world = World.new
 
         @maps[:castle] = LD28::Maps::Castle.new
         @maps[:courtyard] = LD28::Maps::Courtyard.new
         set_current_map :castle
-
-        @camera = Camera.new 0, 0, @game.width, @game.height
-        @camera.decal_y = -150
       end
 
       def leave
+        super
       end
 
       def set_current_map map

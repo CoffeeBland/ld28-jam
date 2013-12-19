@@ -8,7 +8,7 @@ module LD28
   end
   class IronSword < Weapon
     def initialize
-      super ImageSheet.new(File.join('res', 'images', 'iron_sword.png'), 48, 24), 14, 20
+      super ImageSheet.new(File.join('res', 'images', 'iron_sword.png'), 48, 48), 14, 20
     end
   end
 end

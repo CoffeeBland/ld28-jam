@@ -7,14 +7,20 @@ module LD28
 
       def update delta
         super delta
-        if @now_in_for > @exit_at
-          @game.switch_to :menu
+
+        unless @time_before_exit.nil?
+          if @time_before_exit > 0
+            @time_before_exit -= delta
+          else
+            @time_before_exit = nil
+            @game.switch_to :menu, 0x00000000, 1000
+          end
         end
       end
 
       def draw
-        transition 0x000000FF, 0, 1000, @now_in_for
-        transition 0x00000000, @exit_at-1000, @exit_at, @now_in_for
+        super
+
         set_color 0xFFFFFFFF
         draw_rect 0, 0, @game.width, @game.height
         Images[:logo].draw_centered
@@ -22,16 +28,17 @@ module LD28
 
       def init
         super
+
         self.input_press Gosu::KbEscape, Proc.new {
-          @exit_at = @now_in_for + 1000
-        }
+            @game.switch_to :menu, 0x00000000, 1000
+          }
       end
 
       def enter
         super
-        @exit_at = 6000
-      end
 
+        @time_before_exit = 3000
+      end
     end
   end
 end

@@ -1,5 +1,5 @@
-require "engine/physics/collisionnable"
-require "engine/utils/z"
+require 'engine/physics/collisionnable'
+require 'engine/utils/z'
 include Engine::Physics
 
 module Engine
@@ -18,7 +18,7 @@ module Engine
         @should_be_removed = true
       end
 
-      def initialize pos_x, pos_y, width, height, options = Hash.new
+      def initialize(pos_x, pos_y, width, height, options = Hash.new)
         super pos_x, pos_y, width, height, options
         self.image_sheet = options[:image_sheet]
         self.image_sheet_offset_x = options[:image_sheet_offset_x].nil? ? 0 : options[:image_sheet_offset_x]
@@ -28,7 +28,7 @@ module Engine
         @z_index_decal = Z[:entities]
       end
 
-      def die world
+      def die(world)
         self.remove
       end
 
@@ -40,12 +40,12 @@ module Engine
       def dead?
         self.health != nil && self.health <= 0
       end
-      def hit_for damage, world
+      def hit_for(damage, world)
         self.health -= damage unless self.health.nil?
         self.die world if self.dead?
       end
 
-      def update delta, world
+      def update(delta, world)
         super delta, world
 
         if self.drawable?
@@ -55,7 +55,7 @@ module Engine
         end
       end
 
-      def draw camera
+      def draw(camera)
         if self.drawable?
           self.image_sheet.draw camera, self.z_index_decal
         end

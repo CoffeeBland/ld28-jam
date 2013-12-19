@@ -1,12 +1,13 @@
-ROOT_DIR = File.dirname(File.absolute_path(__FILE__))
-#RD = File.dirname(File.absolute_path(__FILE__)) + '/res'
 $: << File.expand_path(File.dirname(__FILE__))
 
+# Require the engine and the game
+ROOT_DIR = File.dirname(File.absolute_path(__FILE__))
 require 'gosu'
 (Dir.glob(ROOT_DIR + '/engine/**/*.rb') + Dir.glob(ROOT_DIR + '/ld28/**/*.rb')).each do |file|
   require file
 end
 
+# Get the settings passed to the game
 ARGV.each do|a|
   p = a.split '='
   v = p.length >= 2 ? p[1] : true
@@ -21,18 +22,19 @@ ARGV.each do|a|
   Settings[p[0].to_sym] = v
 end
 
+# The game itself...
 include Engine::Rendering
 
 class Game < Gosu::Window
   # All the setup!
   def initialize
     # Ideally the width and the height would be dynamic
-    @width = Settings[:width].is_a?(Numeric) ? Settings[:width] : 640
-    @height = Settings[:height].is_a?(Numeric) ? Settings[:height] : 480
+    @width = Settings[:width].is_a?(Numeric) ? Settings[:width] : Settings[:fullscreen] ? Gosu::screen_width : 640
+    @height = Settings[:height].is_a?(Numeric) ? Settings[:height] : Settings[:fullscreen] ? Gosu::screen_height : 480
 
     # Deactivate anti-aliasing
     Gosu::enable_undocumented_retrofication
-    super(@width, @height, (Settings[:fullscreen] != nil && Settings[:fullscreen]))
+    super(@width, @height, (!Settings[:fullscreen].nil? && Settings[:fullscreen]))
     self.caption = 'Ludum Dare 28 : The One Kingdom'
 
     @time = Gosu::milliseconds
@@ -45,16 +47,17 @@ class Game < Gosu::Window
     init_images
 
     Text.window = self
-    init_font
+    init_fonts
 
     @states = {
       :init => LD28::States::Logo.new(self),
       :menu => LD28::States::Menu.new(self),
       :game => LD28::States::Game.new(self)
     }
-    self.switch_to :init
+    self.switch_to :init, 0x00000000, 1500
   end
 
+  # Ressources intialisation
   def init_sounds
     Sounds[:bg1] = File.join('res', 'sounds', 'horrorambient.ogg')
   end
@@ -69,16 +72,48 @@ class Game < Gosu::Window
     Images[:health_bar_container] = File.join('res', 'images', 'health_bar_container.png')
   end
 
-  def init_font
+  def init_fonts
     Text.font = File.join('res', 'font.ttf')
   end
 
-  def switch_to(state_name)
-    unless @active_state.nil?
+  # State management
+  def switch_to(state_name, fade_color, duration)
+    if @active_state.nil? # Switch right away
+      @active_state = @states[state_name]
+      @active_state.fade_in fade_color, duration
+      @active_state.enter
+    else # Do a fade out first==
+      @new_state = @states[state_name]
+      @active_state.fade_out fade_color, duration
       @active_state.leave
+
+      @until_switch = duration
+      @switch_fade_color = fade_color
+      @switch_duration = duration
     end
-    @active_state = @states[state_name]
-    @active_state.enter
+  end
+
+  # Game routines
+  def update
+    delta = self.calculate_delta
+
+    # Check for stage switch
+    unless @until_switch.nil?
+      @until_switch -= delta
+      if @until_switch <= 0
+        @until_switch = nil
+        @active_state = @new_state
+        @active_state.fade_in @switch_fade_color, @switch_duration
+        @active_state.enter
+      end
+    end
+
+    @pressed_inputs.keys.each do |id| @active_state.down id end
+    @active_state.update delta
+  end
+
+  def draw
+    @active_state.draw
   end
 
   def calculate_delta
@@ -88,15 +123,7 @@ class Game < Gosu::Window
     @delta
   end
 
-  def update
-    @pressed_inputs.keys.each do |id| @active_state.down id end
-    @active_state.update self.calculate_delta
-  end
-
-  def draw
-    @active_state.draw
-  end
-
+  # Input dispatching
   def button_down(id)
     @active_state.press id
     @pressed_inputs[id] = true

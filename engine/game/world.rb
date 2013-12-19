@@ -1,7 +1,7 @@
-require "set"
-require "engine/physics/spatial_map"
-require "pp"
-require "engine/game/character"
+require 'set'
+require 'engine/physics/spatial_map'
+require 'pp'
+require 'engine/game/character'
 
 module Engine
   module Game
@@ -23,7 +23,7 @@ module Engine
         self.to_add = Array.new
       end
 
-      def update delta
+      def update(delta)
         to_remove = Array.new
         self.entities.each do |entity|
           if entity.should_be_removed
@@ -45,16 +45,16 @@ module Engine
         self.to_add.clear
       end
 
-      def draw camera
+      def draw(camera)
         self.spatial_map.get(camera).each do |entity|
           entity.draw camera
         end
       end
 
-      def add entity
+      def add(entity)
         self.to_add.push entity
       end
-      def remove entity
+      def remove(entity)
         self.entities.delete entity
         self.spatial_map.remove entity
       end
@@ -64,17 +64,19 @@ module Engine
         self.to_add.clear
       end
 
-      def damage_point pos_x, pos_y, radius, source, damage
+      def damage_point(pos_x, pos_y, radius, source, damage, push_x = 0, push_y = 0)
         objs = self.spatial_map.within(pos_x, pos_y, radius).delete(source)
         objs.each do |entity|
-          unless entity.is_a?(Character) && entity.damaged_duration > 0
+          if entity.is_a?(Character) && entity.damaged_duration <= 0
             entity.hit_for damage, self
+          else
+            objs.delete entity
           end
         end
         objs
       end
 
-      def check_for_door_with player
+      def check_for_door_with(player)
         self.entities.each do |e|
           if e.is_a?(GhostDoor) && e.overlaps?(player)
             e.react_to_character player, self

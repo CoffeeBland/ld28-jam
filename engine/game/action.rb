@@ -1,15 +1,15 @@
 module Engine
   module Game
     class Cue
-      attr_reader :time_left
+      attr_reader :cue
       attr_reader :act
 
       def act world, source
          @action.call world, source
       end
 
-      def initialize time_left, act
-         @time_left = time_left
+      def initialize cue, act
+         @cue = cue
          @action = act
       end
     end
@@ -20,12 +20,13 @@ module Engine
       attr_reader :time_left
 
       def initialize duration, cues
+        @duration = duration
         @time_left = duration
         @cues = cues
       end
 
       def next_cue
-        if self.cues[-1] != nil && self.cues[-1].time_left >= self.time_left
+        if self.cues[-1] != nil && self.cues[-1].cue >= (self.time_left.to_f / @duration)
           @current_cue = self.cues.pop
         else
           nil
