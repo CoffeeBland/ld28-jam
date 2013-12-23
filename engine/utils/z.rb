@@ -28,11 +28,8 @@ module Engine
 
       def self.[] key
         val = @@ranges[key]
-        if val.is_a? Range
-          rand() * (val.last - val.first) + val.first
-        else
-          val
-        end
+        val = rand() * (val.last - val.first) + val.first if val.is_a? Range
+        val
       end
     end
   end

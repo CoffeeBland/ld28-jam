@@ -95,7 +95,7 @@ module Engine
 				@width = tileWidth
 				@height = tileHeight
 				@color = 0xffffffff
-				@z_index = options[:z_index].nil? ? 99 : options[:z_index]
+				@z_index = options[:z_index].nil? ? 0 : options[:z_index]
 				@reverse = 1
 
 				self.is_repeating = options[:is_repeating].nil? ? true : options[:is_repeating]

@@ -58,7 +58,7 @@ module LD28
           ImageSheet.new File.join('res', 'images', img_name + '.png'), 24, 48, :frames_per_second => 10
         }
 
-        @hero_init_pos_x = @hero_init_pos_x.nil? ? (-300 + 8*24) : (300-48)
+        @hero_init_pos_x = (-101)
         @hero_init_pos_y = (350 - (3*24))
 
         state.player = LD28::Characters::Hero.new @hero_init_pos_x, @hero_init_pos_y, 18, 36, {
@@ -85,7 +85,7 @@ module LD28
         state.world.add CollisionnableBlock.new -282, 270, 6, 56
         # Throne pedestal
         state.world.add CollisionnableBlock.new -300, 326, 144, 24
-        state.world.add BlockAngleTL_BR.new -156, 325, 12, 25
+        state.world.add BlockAngleTL_BR.new -156, 326, 12, 24
         state.world.add BlockAngleTR_BL.new -106, 326, 24, 24
         state.world.add BlockAngleTL_BR.new -56, 326, 32, 24
         # Floor
@@ -94,6 +94,7 @@ module LD28
         state.world.add CollisionnableBlock.new -324, 150, 24, 200
         # Right wall
         state.world.add CollisionnableBlock.new 300, 150, 24, 200
+        state.world.add CollisionnableBlock.new 200, 346, 24, 4
         # Door
         state.world.add PhysicalDoor.new 299, 254, 12, 96, {
           :action => Proc.new { |sender, col, world|

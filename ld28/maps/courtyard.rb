@@ -31,9 +31,9 @@ module LD28
         Images[:desert_bg].draw 768 - state.camera.pos_x, 130 - state.camera.pos_y, 0
 
         # Objects / Buildings
-        Images[:castle].draw -150 - state.camera.pos_x, 150 - state.camera.pos_y, 2
-        Images[:gate].draw -300 - state.camera.pos_x, 150 - state.camera.pos_y, 2
-        Images[:gate].draw 300 - state.camera.pos_x, 150 - state.camera.pos_y, 2
+        Images[:castle].draw -150 - state.camera.pos_x, 150 - state.camera.pos_y, 1
+        Images[:gate].draw -300 - state.camera.pos_x, 150 - state.camera.pos_y, 1
+        Images[:gate].draw 300 - state.camera.pos_x, 150 - state.camera.pos_y, 1
 
         # Flooring
         state.set_color 0x423600FF

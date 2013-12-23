@@ -44,22 +44,17 @@ module Engine
 
       # State routines
       def update delta
-        if delta > 500
-          return
-        end
-
         if self.in_transition?
           @transition_left -= delta
         end
-        @now_in_for += delta
       end
 
       def draw
         # Transition
         if self.in_transition?
           progress_ratio = @transition_left / @transition_duration
-          @transition_current_color.alpha = 
-            (@transition_initial_color.alpha * progress_ratio) + 
+          @transition_current_color.alpha =
+            (@transition_initial_color.alpha * progress_ratio) +
             (@transition_final_color.alpha * (1 - progress_ratio))
           self.draw_rect 0, 0, @game.width, @game.height, Z[:fade_in_out], @transition_current_color
         end
@@ -74,8 +69,6 @@ module Engine
         unless @has_been_initialized
           self.init
         end
-
-        @now_in_for = 0
       end
 
       def leave
@@ -83,19 +76,19 @@ module Engine
 
       # Input management
       def press id
-        unless @press[id].nil? || self.in_transition?
+        unless @press[id].nil?# || self.in_transition?
           @press[id].call
         end
       end
 
       def release id
-        unless @release[id].nil? || self.in_transition?
+        unless @release[id].nil?# || self.in_transition?
           @release[id].call
         end
       end
 
       def down id
-        unless @down[id].nil? || self.in_transition?
+        unless @down[id].nil?# || self.in_transition?
           @down[id].call
         end
       end
@@ -123,6 +116,10 @@ module Engine
 
       def draw_rect_outline x, y, width, height, z = 0
         @game.draw_rect_outline x, y, width, height, z
+      end
+
+      def draw_line x1, y1, x2, y2, z = 0, color = @game.color
+        @game.draw_line(x1, y1, color, x2, y2, color, z)
       end
     end
   end

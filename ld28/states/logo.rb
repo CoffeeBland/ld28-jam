@@ -30,6 +30,7 @@ module LD28
         super
 
         self.input_press Gosu::KbEscape, Proc.new {
+            @time_before_exit = nil
             @game.switch_to :menu, 0x00000000, 1000
           }
       end

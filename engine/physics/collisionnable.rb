@@ -84,17 +84,17 @@ module Engine
               return true
             when :diagonal_tl_br
               corner_x = self.pos_x - entity.pos_x
-              corner_y = self.pos_y + self.height - entity.pos_y
-              if  corner_x < 0 ||
-                  corner_y > entity.height
-                return true
+              corner_y = self.bottom - entity.pos_y
+              if (corner_x < 0 ||
+                  corner_y > entity.height)
+                #re turn true
               end
             when :diagonal_tr_bl
-              corner_x = self.pos_x + self.width - entity.pos_x
-              corner_y = self.pos_y + self.height - entity.pos_y
-              if  corner_x > entity.width ||
-                  corner_y > entity.height
-                return true
+              corner_x = self.right - entity.pos_x
+              corner_y = self.bottom - entity.pos_y
+              if (corner_x > entity.width ||
+                  corner_y > entity.height)
+                #return true
               end
             else
               return true
@@ -105,22 +105,22 @@ module Engine
       end
       def in_collision_entity?(entity, position_x, position_y)
         entity.can_be_collided &&
-        position_x - (entity.pos_x + entity.width) < 0 &&
-        (position_x + self.width) - entity.pos_x > 0 &&
-        position_y - (entity.pos_y + entity.height) < 0 &&
-        (position_y + self.height) - entity.pos_y > 0
+        position_x - entity.right < 0 &&
+        position_x + self.width - entity.pos_x > 0 &&
+        position_y - entity.bottom < 0 &&
+        position_y + self.height - entity.pos_y > 0
       end
       def overlaps?(entity)
         self.x_aligned?(entity, self.pos_x, self.pos_y) &&
         self.y_aligned?(entity, self.pos_x, self.pos_y)
       end
       def x_aligned?(entity, position_x, position_y)
-        position_x - (entity.pos_x + entity.width) < DISTANCE_TOLERANCE &&
-        (position_x + self.width) - entity.pos_x > -DISTANCE_TOLERANCE
+        position_x - entity.right < DISTANCE_TOLERANCE &&
+        position_x + self.width - entity.pos_x > -DISTANCE_TOLERANCE
       end
       def y_aligned?(entity, position_x, position_y)
-        position_y - (entity.pos_y + entity.height) < DISTANCE_TOLERANCE &&
-        (position_y + self.height) - entity.pos_y > -DISTANCE_TOLERANCE
+        position_y - entity.bottom < DISTANCE_TOLERANCE &&
+        position_y + self.height - entity.pos_y > -DISTANCE_TOLERANCE
       end
 
       def determine_collision(entity, velocity_x, velocity_y)
@@ -128,15 +128,15 @@ module Engine
           when :none
             self.determine_straight_collision entity, velocity_x, velocity_y
           when :diagonal_tl_br
-            if self.pos_x <= entity.pos_x ||
-                self.pos_y >= (entity.pos_y + entity.height)
+            if (self.left <= entity.left && self.bottom >= (entity.top + STEP_MAXIMUM)) ||
+                self.top >= entity.bottom
               self.determine_straight_collision entity, velocity_x, velocity_y
             else
               self.determine_tl_br_collision entity, velocity_x, velocity_y
             end
           when :diagonal_tr_bl
-            if self.pos_x + self.width >= entity.pos_x + entity.width ||
-                self.pos_y >= (entity.pos_y + entity.height)
+            if (self.right >= entity.right && self.bottom >= (entity.top + STEP_MAXIMUM)) ||
+                self.top >= entity.bottom
               self.determine_straight_collision entity, velocity_x, velocity_y
             else
               self.determine_tr_bl_collision entity, velocity_x, velocity_y
@@ -148,42 +148,48 @@ module Engine
       def determine_straight_collision(entity, velocity_x, velocity_y)
         col = Collision.new velocity_x, velocity_y
 
+        # Going right
         if velocity_x > 0
-          tmp_x = entity.pos_x - self.pos_x - self.width
-          tmp_y = velocity_y * (tmp_x / velocity_x)
-          if tmp_x > -DISTANCE_TOLERANCE &&
-              tmp_x < velocity_x &&
+          tmp_x = entity.left - self.right # Distance to collision
+          tmp_y = velocity_y * (tmp_x / velocity_x) # Scale the vertical distance
+
+          if tmp_x > -DISTANCE_TOLERANCE && tmp_x < velocity_x &&
               self.y_aligned?(entity, pos_x + tmp_x, pos_y + tmp_y)
             col.distance_x = tmp_x
+            col.distance_y = tmp_y
             col.in_collision_right = true
             col.collision_x = entity
           end
+        # Going left
         elsif velocity_x < 0
-          tmp_x = entity.pos_x + entity.width - self.pos_x
-          tmp_y = velocity_y * (tmp_x / velocity_x)
-          if tmp_x < DISTANCE_TOLERANCE &&
-              tmp_x > velocity_x &&
+          tmp_x = entity.right - self.left # Distance to collision
+          tmp_y = velocity_y * (tmp_x / velocity_x) # Scale the vertical distance
+
+          if tmp_x < DISTANCE_TOLERANCE && tmp_x > velocity_x &&
               self.y_aligned?(entity, pos_x + tmp_x, pos_y + tmp_y)
             col.distance_x = tmp_x
+            col.distance_y = tmp_y
             col.in_collision_left = true
             col.collision_x = entity
           end
         end
+        # Going down
         if velocity_y > 0
-          tmp_y = entity.pos_y - (self.pos_y + self.height)
-          tmp_x = velocity_x * (tmp_y / velocity_y)
-          if tmp_y > -DISTANCE_TOLERANCE &&
-              tmp_y < velocity_y &&
+          tmp_y = entity.top - self.bottom # Distance to collision
+          tmp_x = velocity_x * (tmp_y / velocity_y) # Scale the horizontal distance
+
+          if tmp_y > -DISTANCE_TOLERANCE && tmp_y < velocity_y &&
               self.x_aligned?(entity, pos_x + tmp_x, pos_y + tmp_y)
             col.distance_y = tmp_y
             col.in_collision_bottom = true
             col.collision_y = entity
           end
+        # Going up
         elsif velocity_y < 0
-          tmp_y = entity.pos_y + entity.height - self.pos_y
-          tmp_x = velocity_x * (tmp_y / velocity_y)
-          if tmp_y < DISTANCE_TOLERANCE &&
-              tmp_y > velocity_y &&
+          tmp_y = entity.bottom - self.top # Distance to collision
+          tmp_x = velocity_x * (tmp_y / velocity_y) # Scale the horizontal distance
+
+          if tmp_y < DISTANCE_TOLERANCE && tmp_y > velocity_y &&
               self.x_aligned?(entity, pos_x + tmp_x, pos_y + tmp_y)
             col.distance_y = tmp_y
             col.in_collision_top = true
@@ -196,14 +202,17 @@ module Engine
       def determine_tl_br_collision(entity, velocity_x, velocity_y)
         col = Collision.new velocity_x, velocity_y
         obj_ratio = entity.height.to_f / entity.width
-        col.distance_x /= obj_ratio + 1
 
-        tmp = entity.pos_y + entity.height +
-          (obj_ratio *
-          (self.pos_x + col.distance_x -
-          (entity.pos_x + entity.width))) -
-          (self.pos_y + self.height) - DISTANCE_TOLERANCE
-        if tmp - col.distance_y < DISTANCE_TOLERANCE
+        if self.left < entity.left
+          tmp = entity.top - self.bottom
+        else
+          col.distance_x /= obj_ratio + 1
+          tmp = entity.bottom +
+            (obj_ratio * (self.left + col.distance_x - entity.right)) -
+            self.bottom - DISTANCE_TOLERANCE
+        end
+
+        if tmp - col.distance_y < STEP_MAXIMUM
           col.distance_y = tmp
           col.collision_y = entity
           col.in_collision_bottom = true
@@ -213,19 +222,24 @@ module Engine
       def determine_tr_bl_collision(entity, velocity_x, velocity_y)
         col = Collision.new velocity_x, velocity_y
         obj_ratio = entity.height.to_f / entity.width
-        col.distance_x /= obj_ratio + 1
 
-        tmp = entity.pos_y + entity.height -
-          (obj_ratio *
-          (self.pos_x + self.width + col.distance_x - entity.pos_x)) -
-          (self.pos_y + self.height) - DISTANCE_TOLERANCE
-        if tmp - col.distance_y < DISTANCE_TOLERANCE
+        if self.right > entity.right
+          tmp = entity.top - self.bottom
+        else
+          col.distance_x /= obj_ratio + 1
+          tmp = entity.bottom -
+            (obj_ratio * (self.right + col.distance_x - entity.left)) -
+            self.bottom - DISTANCE_TOLERANCE
+        end
+
+        if tmp - col.distance_y < STEP_MAXIMUM
           col.distance_y = tmp
           col.collision_y = entity
           col.in_collision_bottom = true
         end
         col
       end
+
       def shortest_collision(col1, col2)
         col = Collision.new 0, 0
 
@@ -274,14 +288,18 @@ module Engine
         # Establish collision
         if self.collides
           world.spatial_map.get(self.aabb).delete(self).each do |entity|
-            if entity.can_be_collided &&
-                self.in_collision_entity?(entity, self.pos_x + col.distance_x, self.pos_y + col.distance_y)
+            if entity.can_be_collided #&&
+                #self.in_collision_entity?(entity, self.pos_x + col.distance_x, self.pos_y + col.distance_y)
               col = self.shortest_collision(col, self.determine_collision(entity, col.distance_x, col.distance_y))
             end
           end
         end
+
+        # Determine new position after collision
         position_x = self.pos_x + col.distance_x
         position_y = self.pos_y + col.distance_y
+
+        # Move, unless this would result in a collision (final ugly check)
         unless self.collides && in_collision_world?(world, position_x, position_y)
           self.pos_x = position_x
           self.pos_y = position_y
@@ -325,8 +343,8 @@ module Engine
           if col.collision_x != nil
             objs_in_collision.add col.collision_x
             # Check if there should be a step up to do
-            if self.pos_y + self.height - STEP_MAXIMUM <= col.collision_x.pos_y
-              tmp = Math.sqrt((self.pos_y + self.height - col.collision_x.pos_y).abs)
+            if self.bottom - STEP_MAXIMUM <= col.collision_x.pos_y
+              tmp = Math.sqrt((self.bottom - col.collision_x.pos_y).abs)
               self.velocity_y = -(tmp + world.gravity_y * 2)
             else # Otherwise resolve the speed normally
               self.velocity_x *= -col.collision_x.rebound_factor_x

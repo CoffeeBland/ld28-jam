@@ -29,7 +29,8 @@ module LD28
         super delta
 
         @world.update delta
-        @current_map.update self, @now_in_for unless @current_map.nil?
+        @current_map.update self, @tick unless @current_map.nil?
+        @tick += delta
 
         @camera.center_on @player
       end
@@ -50,7 +51,31 @@ module LD28
 
         # BEHOLD! Debugging down here
         if Engine::Utils::Settings[:debugging]
-          set_color 0xEE00EEFF; @world.entities.each do |e| draw_rect_outline e.pos_x - @camera.pos_x, e.pos_y - @camera.pos_y, e.width, e.height, Z[:debugging]; end
+          set_color 0xEE00EEFF
+          @world.entities.each do |e|
+            draw_rect_outline(
+              e.pos_x - @camera.pos_x,
+              e.pos_y - @camera.pos_y,
+              e.width, e.height, Z[:debugging]
+              )
+            if e.angle == :diagonal_tl_br
+              draw_line(
+                  e.left - @camera.pos_x,
+                  e.top - @camera.pos_y,
+                  e.right  - @camera.pos_x,
+                  e.bottom - @camera.pos_y,
+                  Z[:debugging]
+                )
+            elsif e.angle == :diagonal_tr_bl
+              draw_line(
+                  e.right - @camera.pos_x,
+                  e.top - @camera.pos_y,
+                  e.left  - @camera.pos_x,
+                  e.bottom - @camera.pos_y,
+                  Z[:debugging]
+                )
+            end
+          end
           @current_time = Gosu::milliseconds
           @fps = ((@fps.nil? ? 60 : @fps) * 0.9) + (1000.0 / (@current_time - (@last_time.nil? ? 0 : @last_time)) * 0.1)
           Text.draw [@fps.round.to_s], 4, 4, 0, Z[:debugging], 0xFFFF00FF
@@ -116,6 +141,7 @@ module LD28
       def enter
         super
 
+        @tick = 0
         @maps[:castle] = LD28::Maps::Castle.new
         @maps[:courtyard] = LD28::Maps::Courtyard.new
         set_current_map :castle

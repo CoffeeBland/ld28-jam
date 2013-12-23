@@ -2,7 +2,7 @@ require 'engine/game/action'
 
 module LD28
 	module Actions
-		class Interact < Engine::Game::Action 
+		class Interact < Engine::Game::Action
 			DURATION = 400
     	CUES = [
         Cue.new(1, Proc.new { |world, source|

@@ -82,7 +82,7 @@ class Game < Gosu::Window
       @active_state = @states[state_name]
       @active_state.fade_in fade_color, duration
       @active_state.enter
-    else # Do a fade out first==
+    else # Do a fade out first
       @new_state = @states[state_name]
       @active_state.fade_out fade_color, duration
       @active_state.leave
@@ -108,7 +108,10 @@ class Game < Gosu::Window
       end
     end
 
+    # Manage the inputs that are activated
     @pressed_inputs.keys.each do |id| @active_state.down id end
+
+    # Update the current state
     @active_state.update delta
   end
 
@@ -118,7 +121,7 @@ class Game < Gosu::Window
 
   def calculate_delta
     time = Gosu::milliseconds
-    @delta = time - @time
+    @delta = 16.6666666 #@delta = time - @time
     @time = time
     @delta
   end
